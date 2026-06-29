@@ -1,86 +1,174 @@
 'use client';
 
-import { Sparkles, Zap, ShieldCheck, Heart } from 'lucide-react';
-import { FadeSlideUp, SlideInRight } from '@/components/ScrollAnimations';
+import { useRef } from 'react';
+import { motion, useInView, useReducedMotion } from 'framer-motion';
 
-export default function WhyGruppSection() {
-  const points = [
-    {
-      title: 'Transformation',
-      description: 'Our easy to use Banking-as-a-Service platform allows digitization of rural and semi-urban communities.',
-      icon: <Sparkles size={20} className="text-sky-400" />,
-    },
-    {
-      title: 'Speed',
-      description: 'Instead of spending lots of resources on infrastructure and months integrating with different partners, Grupp can get you up and running in days.',
-      icon: <Zap size={20} className="text-sky-400" />,
-    },
-    {
-      title: 'Fully Licensed',
-      description: 'We handle the regulatory burdens and compliance related matters, so you can focus on your customers\' needs.',
-      icon: <ShieldCheck size={20} className="text-sky-400" />,
-    },
-    {
-      title: 'Neutrality',
-      description: 'We enable you with total control to meet your peculiar needs',
-      icon: <Heart size={20} className="text-sky-400" />,
-    },
-  ];
+const REASONS = [
+  {
+    title: 'Transformation',
+    description:
+      'Our Banking-as-a-Service platform digitizes rural and semi-urban communities at scale. Your institution gets enterprise-grade infrastructure without building it from scratch.',
+  },
+  {
+    title: 'Speed',
+    description:
+      'Instead of months of integrations and costly infrastructure projects, Grupp gets you fully operational in days. One integration, all the rails.',
+  },
+  {
+    title: 'Fully Licensed',
+    description:
+      'We carry the regulatory burden and manage all compliance obligations on your behalf. You focus entirely on your customers and growth.',
+  },
+  {
+    title: 'Neutrality',
+    description:
+      "Grupp is white-labeled and fully configurable to your institution's brand and requirements. We enable you — we never compete with you.",
+  },
+];
+
+function ReasonBlock({ reason, index }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-10% 0px' });
+  const reducedMotion = useReducedMotion();
+
+  const variants = reducedMotion
+    ? {
+        hidden:  { opacity: 0 },
+        visible: { opacity: 1, transition: { duration: 0 } },
+      }
+    : {
+        hidden:  { opacity: 0, y: 24 },
+        visible: {
+          opacity: 1,
+          y: 0,
+          transition: { duration: 0.6, delay: index * 0.15, ease: [0.22, 1, 0.36, 1] },
+        },
+      };
 
   return (
-    <section className="relative py-28 px-6 bg-[#09090b] text-white overflow-hidden border-y border-zinc-900">
-      {/* Sleek Grid Mesh */}
-      <div
-        className="absolute inset-0 opacity-[0.04] pointer-events-none"
-        style={{
-          backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 0)',
-          backgroundSize: '40px 40px',
-        }}
-      />
+    <motion.div
+      ref={ref}
+      variants={variants}
+      initial="hidden"
+      animate={isInView ? 'visible' : 'hidden'}
+      style={{
+        borderTop: index === 0 ? 'none' : '1px solid rgba(61, 170, 255, 0.1)',
+        paddingTop: index === 0 ? 0 : '40px',
+        paddingBottom: '40px',
+      }}
+    >
+      <h3 style={{
+        fontFamily: 'var(--font-display)',
+        fontWeight: 700,
+        fontSize: '28px',
+        letterSpacing: '-0.02em',
+        color: '#FFFFFF',
+        marginBottom: '12px',
+        lineHeight: 1.2,
+      }}>
+        {reason.title}
+      </h3>
+      <p style={{
+        fontFamily: 'var(--font-body)',
+        fontWeight: 400,
+        fontSize: '16px',
+        lineHeight: 1.7,
+        color: '#8FAEC8',
+        maxWidth: '480px',
+      }}>
+        {reason.description}
+      </p>
+    </motion.div>
+  );
+}
 
-      {/* Colorful Animated Glowing Blobs */}
-      <div className="absolute top-[10%] left-[5%] w-[450px] h-[450px] bg-sky-500/18 rounded-full blur-[110px] pointer-events-none animate-blob-1" />
-      <div className="absolute top-[40%] right-[10%] w-[500px] h-[500px] bg-indigo-500/15 rounded-full blur-[120px] pointer-events-none animate-blob-2" />
-      <div className="absolute bottom-[5%] left-[25%] w-[450px] h-[450px] bg-purple-500/15 rounded-full blur-[110px] pointer-events-none animate-blob-3" />
+export default function WhyGruppSection() {
+  return (
+    <section
+      id="why-grupp"
+      style={{
+        background: '#050D1A',
+        padding: '120px 48px',
+      }}
+    >
+      <div style={{
+        maxWidth: '1280px',
+        margin: '0 auto',
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: '100px',
+        alignItems: 'start',
+      }}
+        className="why-grupp-grid"
+      >
+        {/* LEFT: Sticky column */}
+        <div style={{ position: 'sticky', top: '120px' }}>
+          <h2
+            className="text-display-base text-section"
+            style={{ color: '#FFFFFF', marginBottom: '24px' }}
+          >
+            Why Grupp?
+          </h2>
+          <p style={{
+            fontFamily: 'var(--font-body)',
+            fontWeight: 400,
+            fontSize: '18px',
+            lineHeight: 1.75,
+            color: '#8FAEC8',
+            marginBottom: '56px',
+            maxWidth: '360px',
+          }}>
+            Because 60 million Nigerians are still waiting for financial services
+            that see them.
+          </p>
 
-      <div className="relative z-10 max-w-7xl mx-auto">
-        
-        {/* Header */}
-        <FadeSlideUp>
-          <div className="text-center max-w-2xl mx-auto mb-20 space-y-4">
-            <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-b from-white to-zinc-400 bg-clip-text text-transparent">
-              Why Grupp?
-            </h2>
-            <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-xl mx-auto">
-              Only a few numbers of Africa's bankable population has access to digital financial services.
-              Grupp is here to equalize access for all.
-            </p>
+          {/* Large stat */}
+          <div>
+            <span style={{
+              fontFamily: 'var(--font-display)',
+              fontWeight: 800,
+              fontSize: 'clamp(64px, 8vw, 96px)',
+              letterSpacing: '-0.03em',
+              color: '#0085FF',
+              display: 'block',
+              lineHeight: 1,
+            }}>
+              120+
+            </span>
+            <span style={{
+              fontFamily: 'var(--font-body)',
+              fontWeight: 400,
+              fontSize: '16px',
+              color: '#8FAEC8',
+              display: 'block',
+              marginTop: '8px',
+            }}>
+              financial institutions on the platform
+            </span>
           </div>
-        </FadeSlideUp>
+        </div>
 
-        {/* Content Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-          {points.map((point, i) => (
-            <SlideInRight key={point.title} delay={i * 0.1}>
-              <div
-                className="flex gap-5 items-start p-5 rounded-2xl bg-white/[0.01] border border-white/5 hover:border-sky-500/20 hover:bg-white/[0.03] transition-all duration-350 hover:-translate-y-1 group h-full"
-              >
-                <div className="p-3.5 rounded-xl bg-sky-500/10 border border-sky-500/20 flex-shrink-0 text-sky-400 shadow-[0_0_15px_rgba(14,165,233,0.1)] group-hover:bg-sky-500 group-hover:text-white transition-all duration-300">
-                  {point.icon}
-                </div>
-                <div className="space-y-1">
-                  <h3 className="text-base font-bold text-white tracking-tight group-hover:text-sky-300 transition-colors duration-300">
-                    {point.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-                    {point.description}
-                  </p>
-                </div>
-              </div>
-            </SlideInRight>
+        {/* RIGHT: Scrollable reason blocks */}
+        <div>
+          {REASONS.map((reason, i) => (
+            <ReasonBlock key={reason.title} reason={reason} index={i} />
           ))}
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .why-grupp-grid {
+            grid-template-columns: 1fr !important;
+            gap: 48px !important;
+            padding: 60px 24px !important;
+          }
+          .why-grupp-grid > div:first-child {
+            position: relative !important;
+            top: 0 !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

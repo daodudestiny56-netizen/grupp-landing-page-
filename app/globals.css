@@ -1,7 +1,27 @@
-/* ── Google Fonts (must precede tailwindcss import) ──── */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+/* ── Google Fonts @import (Tailwind must come after) ──── */
 
 @import "tailwindcss";
+
+/* ── CSS Custom Properties — Deep Water Blue System ─────────────────── */
+:root {
+  /* Color tokens */
+  --color-base:       #050D1A;
+  --color-panel:      #0A1628;
+  --color-card:       #0F1E38;
+  --color-mid:        #1A3A6B;
+  --color-brand:      #0085FF;
+  --color-accent:     #3DAAFF;
+  --color-light:      #C8E4FF;
+  --color-text:       #FFFFFF;
+  --color-secondary:  #8FAEC8;
+  --color-body:       #C2D4E8;
+  --color-success:    #00D4A4;
+
+  /* Font families */
+  --font-display: var(--font-bricolage), 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-body:    var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
+  --font-mono:    var(--font-jetbrains), 'JetBrains Mono', 'Courier New', monospace;
+}
 
 /* ── Base resets ─────────────────────────────────────── */
 *, *::before, *::after {
@@ -15,37 +35,61 @@ html {
 }
 
 body {
+  background-color: var(--color-base);
+  color: var(--color-text);
+  font-family: var(--font-body);
   overflow-x: hidden;
 }
 
 /* ── Custom scrollbar ────────────────────────────────── */
 * {
-  scrollbar-color: #0ea5e9 transparent;
+  scrollbar-color: var(--color-brand) transparent;
   scrollbar-width: thin;
 }
-
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #0ea5e9;
-  border-radius: 99px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #0284c7;
-}
+::-webkit-scrollbar        { width: 6px; height: 6px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: var(--color-brand); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-accent); }
 
 /* ── Focus ring ──────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid #0ea5e9;
+  outline: 2px solid var(--color-brand);
   outline-offset: 2px;
+}
+
+/* ── Hide scrollbar utility ──────────────────────────── */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Custom cursor class ─────────────────────────────── */
+.cursor-none-global { cursor: none !important; }
+.cursor-none-global * { cursor: none !important; }
+
+/* ── Typography utilities ────────────────────────────── */
+.font-display { font-family: var(--font-display); }
+.font-body    { font-family: var(--font-body); }
+.font-mono    { font-family: var(--font-mono); }
+
+/* Display text shared settings */
+.text-display-base {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.0;
+}
+
+/* Type scale */
+.text-hero    { font-size: clamp(52px, 7vw, 96px); }
+.text-section { font-size: clamp(36px, 5vw, 64px); }
+.text-card    { font-size: clamp(22px, 2.5vw, 32px); }
+
+.text-eyebrow {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-accent);
 }
 
 /* ── Marquee animations ──────────────────────────────── */
@@ -53,122 +97,92 @@ body {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-33.333%); }
 }
-
 @keyframes marquee-reverse {
   0%   { transform: translateX(-33.333%); }
   100% { transform: translateX(0); }
 }
 
-/* ── Floating blobs ──────────────────────────────────── */
-@keyframes float {
-  0%, 100% { transform: translateY(0px) scale(1); }
-  50%       { transform: translateY(-24px) scale(1.02); }
+/* ── Phone float animation ───────────────────────────── */
+@keyframes float-phone {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+.animate-float-phone {
+  animation: float-phone 4s ease-in-out infinite;
+  will-change: transform;
 }
 
-/* ── Hide scrollbar utility ──────────────────────────── */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
+/* ── Scroll bounce arrow ─────────────────────────────── */
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateY(0px); opacity: 0.6; }
+  50%       { transform: translateY(6px); opacity: 1; }
 }
-.no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+.animate-scroll-bounce {
+  animation: scroll-bounce 1.8s ease-in-out infinite;
 }
 
-/* ── Moving background blobs ─────────────────────────── */
+/* ── Pulsing dot ─────────────────────────────────────── */
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.4); opacity: 0.7; }
+}
+.animate-pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* ── Border pulse (transaction cards) ───────────────── */
+@keyframes border-pulse-1 {
+  0%, 100% { border-color: rgba(61, 170, 255, 0.2); }
+  50%       { border-color: rgba(61, 170, 255, 0.5); }
+}
+@keyframes border-pulse-2 {
+  0%, 100% { border-color: rgba(61, 170, 255, 0.2); }
+  50%       { border-color: rgba(61, 170, 255, 0.5); }
+}
+@keyframes border-pulse-3 {
+  0%, 100% { border-color: rgba(61, 170, 255, 0.2); }
+  50%       { border-color: rgba(61, 170, 255, 0.5); }
+}
+.animate-border-pulse-1 { animation: border-pulse-1 3s ease-in-out 0s infinite; }
+.animate-border-pulse-2 { animation: border-pulse-2 3s ease-in-out 0.8s infinite; }
+.animate-border-pulse-3 { animation: border-pulse-3 3s ease-in-out 1.6s infinite; }
+
+/* ── Glow in (CTA section) ───────────────────────────── */
+@keyframes glow-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Blob drift animations (kept for bg use) ─────────── */
 @keyframes blob-1 {
-  0% { transform: translate(0px, 0px) scale(1); }
-  33% { transform: translate(40px, -60px) scale(1.15); }
-  66% { transform: translate(-30px, 30px) scale(0.9); }
+  0%   { transform: translate(0px, 0px) scale(1); }
+  33%  { transform: translate(40px, -60px) scale(1.15); }
+  66%  { transform: translate(-30px, 30px) scale(0.9); }
   100% { transform: translate(0px, 0px) scale(1); }
 }
-
 @keyframes blob-2 {
-  0% { transform: translate(0px, 0px) scale(1); }
-  50% { transform: translate(-60px, 80px) scale(1.1); }
+  0%   { transform: translate(0px, 0px) scale(1); }
+  50%  { transform: translate(-60px, 80px) scale(1.1); }
   100% { transform: translate(0px, 0px) scale(1); }
 }
+.animate-blob-1 { animation: blob-1 20s infinite alternate ease-in-out; }
+.animate-blob-2 { animation: blob-2 25s infinite alternate ease-in-out; }
 
-@keyframes blob-3 {
-  0% { transform: translate(0px, 0px) scale(1); }
-  33% { transform: translate(50px, 50px) scale(0.95); }
-  66% { transform: translate(-40px, -50px) scale(1.15); }
-  100% { transform: translate(0px, 0px) scale(1); }
-}
-
-.animate-blob-1 {
-  animation: blob-1 20s infinite alternate ease-in-out;
-}
-.animate-blob-2 {
-  animation: blob-2 25s infinite alternate ease-in-out;
-}
-.animate-blob-3 {
-  animation: blob-3 22s infinite alternate ease-in-out;
-}
-
-/* ── focus-in-contract animation ─────────────────────── */
-.focus-in-contract {
-	-webkit-animation: focus-in-contract 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-	        animation: focus-in-contract 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-}
-
-@-webkit-keyframes focus-in-contract {
-  0% {
-    letter-spacing: 0.4em;
-    -webkit-filter: blur(12px);
-            filter: blur(12px);
-    opacity: 0;
+/* ── Reduced motion overrides ────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
-  100% {
-    letter-spacing: -0.025em;
-    -webkit-filter: blur(0px);
-            filter: blur(0px);
-    opacity: 1;
-  }
-}
-
-@keyframes focus-in-contract {
-  0% {
-    letter-spacing: 0.4em;
-    -webkit-filter: blur(12px);
-            filter: blur(12px);
-    opacity: 0;
-  }
-  100% {
-    letter-spacing: -0.025em;
-    -webkit-filter: blur(0px);
-            filter: blur(0px);
-    opacity: 1;
-  }
-}
-
-/* ── slide-in-right animation ────────────────────────── */
-.slide-in-right {
-	-webkit-animation: slide-in-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-	        animation: slide-in-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-}
-
-@-webkit-keyframes slide-in-right {
-  0% {
-    -webkit-transform: translateX(1000px);
-            transform: translateX(1000px);
-    opacity: 0;
-  }
-  100% {
-    -webkit-transform: translateX(0);
-            transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slide-in-right {
-  0% {
-    -webkit-transform: translateX(1000px);
-            transform: translateX(1000px);
-    opacity: 0;
-  }
-  100% {
-    -webkit-transform: translateX(0);
-            transform: translateX(0);
-    opacity: 1;
+  .animate-float-phone,
+  .animate-scroll-bounce,
+  .animate-pulse-dot,
+  .animate-border-pulse-1,
+  .animate-border-pulse-2,
+  .animate-border-pulse-3,
+  .animate-blob-1,
+  .animate-blob-2 {
+    animation: none !important;
   }
 }

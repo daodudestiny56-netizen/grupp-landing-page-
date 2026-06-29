@@ -1,102 +1,205 @@
 'use client';
 
-import { ScaleBlur, FadeSlideUp } from '@/components/ScrollAnimations';
+import { useEffect, useRef, useState } from 'react';
+import { motion, useInView, useReducedMotion } from 'framer-motion';
 
-export default function CommunitySection() {
+const CARDS = [
+  {
+    initials: 'CA',
+    gradient: 'linear-gradient(135deg, #0085FF, #3DAAFF)',
+    name: 'Cynthia A.',
+    action: 'received a business loan',
+    amount: '₦50,000',
+    tag: 'Loans',
+    pulseClass: 'animate-border-pulse-1',
+  },
+  {
+    initials: 'CB',
+    gradient: 'linear-gradient(135deg, #1A3A6B, #3DAAFF)',
+    name: 'Charles B.',
+    action: 'made a cash deposit',
+    amount: '₦15,000',
+    tag: 'Deposits',
+    pulseClass: 'animate-border-pulse-2',
+  },
+  {
+    initials: 'FO',
+    gradient: 'linear-gradient(135deg, #0F1E38, #0085FF)',
+    name: 'Fatima O.',
+    action: 'completed a transfer',
+    amount: '₦8,500',
+    tag: 'Transfer',
+    pulseClass: 'animate-border-pulse-3',
+  },
+];
+
+function TransactionCard({ card, delay, reducedMotion }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-10% 0px' });
+
+  const variants = reducedMotion
+    ? {
+        hidden:  { opacity: 0 },
+        visible: { opacity: 1, transition: { duration: 0 } },
+      }
+    : {
+        hidden:  { opacity: 0, x: -50 },
+        visible: { opacity: 1, x: 0, transition: { duration: 0.6, delay, ease: [0.25, 0.46, 0.45, 0.94] } },
+      };
+
   return (
-    <section
-      className="relative py-24 px-6 overflow-hidden bg-cover bg-center"
-      style={{ backgroundImage: "url('/market.jpg')" }}
+    <motion.div
+      ref={ref}
+      variants={variants}
+      initial="hidden"
+      animate={isInView ? 'visible' : 'hidden'}
+      className={card.pulseClass}
+      style={{
+        background: 'rgba(10, 22, 40, 0.9)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        border: '1px solid rgba(61, 170, 255, 0.2)',
+        borderRadius: '16px',
+        padding: '16px 20px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '14px',
+      }}
     >
-      {/* Transparent white overlay */}
-      <div className="absolute inset-0 bg-white/85 backdrop-blur-[2px]" />
+      {/* Avatar */}
+      <div style={{
+        width: '40px',
+        height: '40px',
+        borderRadius: '50%',
+        background: card.gradient,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexShrink: 0,
+        fontFamily: 'var(--font-body)',
+        fontWeight: 600,
+        fontSize: '12px',
+        color: '#FFFFFF',
+      }}>
+        {card.initials}
+      </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-        
-        {/* Left Side: Market Scene Image & Floating Transaction Cards */}
-        <div className="relative flex justify-center lg:justify-start">
-          <ScaleBlur>
-            <div className="relative w-full max-w-md h-[400px] sm:h-[480px] rounded-3xl overflow-hidden border border-white/20 shadow-2xl">
-              {/* Market Scene Image inside the card */}
-              <img
-                src="/market.jpg"
-                alt="Local Market Scene Detail"
-                className="w-full h-full object-cover"
-              />
-              {/* Vignette Overlay for card to keep overlays visible */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20" />
-
-              {/* Floating Transaction Bubbles */}
-              <div className="absolute inset-x-6 top-8 space-y-6">
-                {/* Cynthia's Loan */}
-                <div className="animate-fade-in-up">
-                  <div className="relative bg-sky-500 text-white p-4 rounded-2xl rounded-tl-none shadow-xl max-w-[85%] border border-sky-400/20">
-                    <p className="text-xs sm:text-sm font-semibold leading-relaxed">
-                      Cynthia just received a ₦50,000 business loan.
-                    </p>
-                  </div>
-                  <div className="mt-2 ml-4 inline-block px-3 py-1 bg-sky-500/20 border border-sky-500/30 rounded-full text-[10px] font-bold text-sky-800 uppercase tracking-wider">
-                    Loans
-                  </div>
-                </div>
-
-                {/* Charles' Deposit */}
-                <div className="animate-fade-in-up pt-4">
-                  <div className="relative bg-sky-500 text-white p-4 rounded-2xl rounded-tl-none shadow-xl max-w-[85%] border border-sky-400/20">
-                    <p className="text-xs sm:text-sm font-semibold leading-relaxed">
-                      Charles just made a ₦15,000 cash deposit.
-                    </p>
-                  </div>
-                  <div className="mt-2 ml-4 inline-block px-3 py-1 bg-sky-500/20 border border-sky-500/30 rounded-full text-[10px] font-bold text-sky-800 uppercase tracking-wider">
-                    Deposits
-                  </div>
-                </div>
-              </div>
-            </div>
-          </ScaleBlur>
+      {/* Content */}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
+          <span style={{
+            fontFamily: 'var(--font-body)',
+            fontWeight: 500,
+            fontSize: '13px',
+            color: '#FFFFFF',
+            whiteSpace: 'nowrap',
+          }}>
+            {card.name}
+          </span>
+          <span style={{
+            fontFamily: 'var(--font-mono)',
+            fontWeight: 600,
+            fontSize: '14px',
+            color: '#3DAAFF',
+            flexShrink: 0,
+          }}>
+            {card.amount}
+          </span>
         </div>
-
-        {/* Right Side: Copywriting Content */}
-        <div className="flex flex-col items-start max-w-xl text-zinc-900">
-          <FadeSlideUp>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight mb-8 text-zinc-950">
-              Let's build a future where{' '}
-              <span className="relative inline-block">
-                offline communities
-                {/* Blue curved underline icon */}
-                <svg
-                  className="absolute -bottom-3 left-0 w-full h-3 text-sky-500"
-                  viewBox="0 0 200 9"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M2 7C40 3 120 1 198 5C140 1 60 3 2 7Z"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </span>{' '}
-              fit in.
-            </h2>
-          </FadeSlideUp>
-
-          <FadeSlideUp delay={0.1}>
-            <button className="mb-8 px-6 py-3 bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs rounded-xl shadow-lg transition-all duration-200 hover:-translate-y-0.5 shadow-sky-500/25">
-              How it works
-            </button>
-          </FadeSlideUp>
-
-          <FadeSlideUp delay={0.2}>
-            <p className="text-zinc-700 text-sm sm:text-base leading-relaxed font-medium">
-              Grupp handles all the technical aspects of your financial service delivery so that you
-              don't have to worry about technology. We provide you with a ready-to-use solution that
-              you can instantly start to sell to your customers.
-            </p>
-          </FadeSlideUp>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
+          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#00D4A4', flexShrink: 0 }} />
+          <span style={{
+            fontFamily: 'var(--font-body)',
+            fontSize: '11px',
+            color: '#8FAEC8',
+          }}>
+            {card.action} · {card.tag}
+          </span>
         </div>
       </div>
+    </motion.div>
+  );
+}
+
+export default function CommunitySection() {
+  const reducedMotion = useReducedMotion();
+
+  return (
+    <section
+      id="community"
+      style={{
+        position: 'relative',
+        minHeight: '600px',
+        backgroundImage: "url('/market.jpg')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Dark gradient overlay — heavy left, lightens right */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        background: 'linear-gradient(to right, rgba(5,13,26,0.92) 0%, rgba(5,13,26,0.6) 50%, rgba(5,13,26,0.2) 100%)',
+      }} />
+
+      <div style={{
+        position: 'relative',
+        zIndex: 2,
+        maxWidth: '1280px',
+        margin: '0 auto',
+        padding: '100px 48px',
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: '80px',
+        alignItems: 'center',
+      }}
+        className="community-grid"
+      >
+        {/* LEFT: Transaction cards */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {CARDS.map((card, i) => (
+            <TransactionCard
+              key={card.name}
+              card={card}
+              delay={i * 0.3}
+              reducedMotion={reducedMotion}
+            />
+          ))}
+        </div>
+
+        {/* RIGHT: Headline + copy */}
+        <div>
+          <h2
+            className="text-display-base text-section"
+            style={{ color: '#FFFFFF', marginBottom: '24px' }}
+          >
+            Let's build a future where{' '}
+            <span style={{ color: '#0085FF' }}>offline communities</span>{' '}
+            fit in.
+          </h2>
+          <p style={{
+            fontFamily: 'var(--font-body)',
+            fontWeight: 400,
+            fontSize: '18px',
+            lineHeight: 1.75,
+            color: '#8FAEC8',
+          }}>
+            Grupp is the infrastructure layer that makes it possible — for the market
+            trader in Onitsha, the cooperative in Kano, the POS agent in Ojo.
+          </p>
+        </div>
+      </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .community-grid {
+            grid-template-columns: 1fr !important;
+            padding: 60px 24px !important;
+            gap: 40px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

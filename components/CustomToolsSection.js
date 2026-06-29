@@ -1,205 +1,279 @@
 'use client';
 
-import { useState } from 'react';
-import { CreditCard, ShieldCheck, Landmark, ArrowRight, Server, FileText } from 'lucide-react';
-import { FadeSlideUp } from '@/components/ScrollAnimations';
+import { useEffect, useRef, useState } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useReducedMotion } from 'framer-motion';
 
-export default function CustomToolsSection() {
-  const [activeTab, setActiveTab] = useState('sme');
+gsap.registerPlugin(ScrollTrigger);
 
-  // Define tab details
-  const tabs = {
-    sme: {
-      id: 'sme',
-      title: 'SME Banking',
-      header: 'Community banking as a service',
-      description:
-        'Today we empower much broader financial institutions to be digitally connected to the offline communities by enabling them with all the resources needed to power financial services to the underserved through mobile money agents. Customized in their brands, backed by Grupp.',
-      action: 'Learn More',
-      preview: 'We aid in fulfilling your financial inclusion aspirations while delivering...',
-      icon: <Landmark size={20} className="text-zinc-650" />,
-      visual: (
-        <div className="relative w-full h-64 flex items-center justify-center">
-          <div className="relative bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 w-48 shadow-xl animate-float">
-            {/* POS terminal body */}
-            <div className="bg-sky-600 rounded-xl p-4 border border-sky-400/30">
-              {/* Receipt slot */}
-              <div className="h-6 bg-white rounded-t-lg flex items-end justify-center mb-3">
-                <span className="w-10 h-1 bg-zinc-300 rounded mb-1" />
-              </div>
-              {/* Screen */}
-              <div className="h-10 bg-zinc-950 rounded-lg mb-3 flex items-center justify-center">
-                <span className="text-[10px] font-mono font-bold text-sky-400">grupp.</span>
-              </div>
-              {/* Keyboard/Button grids */}
-              <div className="grid grid-cols-3 gap-1.5">
-                {[...Array(9)].map((_, i) => (
-                  <div key={i} className="h-2.5 bg-sky-500/50 rounded-sm" />
-                ))}
-              </div>
-            </div>
-            {/* Pedestal */}
-            <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-40 h-3 bg-zinc-950/20 rounded-full blur-md" />
-          </div>
-        </div>
-      ),
-    },
-    payment: {
-      id: 'payment',
-      title: 'Payment',
-      header: 'Payment Infrastructure',
-      description:
-        'Connect to multiple channels to give your end-users the best payments experience. Whether in person point-of-sales terminals, Nuban, or APIs for disbursements, you can rely on our robust infrastructure to always have you covered.',
-      links: [
-        { label: 'Terminal', href: '#' },
-        { label: 'Nuban', href: '#' },
-      ],
-      preview: 'You can offer full-scale payment services. Leverage...',
-      icon: <CreditCard size={20} className="text-zinc-650" />,
-      visual: (
-        <div className="relative w-full h-64 flex items-center justify-center">
-          <div className="relative bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 w-48 shadow-xl animate-float">
-            {/* Database server rack */}
-            <div className="space-y-2">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="bg-sky-600 rounded-lg p-2.5 border border-sky-400/30 flex items-center justify-between">
-                  <Server size={14} className="text-white" />
-                  <div className="flex gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="w-1.5 h-1.5 rounded-full bg-sky-300" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      ),
-    },
-    lending: {
-      id: 'lending',
-      title: 'Lending',
-      header: 'Lending',
-      description:
-        'Lending to underserved businesses often comes with high credit risks, increased operational costs, repeated data entry, paperwork, and human error. Enjoy a fully regulated, secured, digitalized, and automated end-to-end lending process; to help you serve even the most complex of business borrowers.',
-      action: 'Learn More',
-      preview: 'No more manual process of Loan Origination; Gain a competitive edge using Grupp.',
-      icon: <ShieldCheck size={20} className="text-zinc-650" />,
-      visual: (
-        <div className="relative w-full h-64 flex items-center justify-center">
-          <div className="relative bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 w-48 shadow-xl animate-float">
-            {/* ID / Lending badge */}
-            <div className="bg-sky-600 rounded-xl p-3 border border-sky-400/30">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 rounded-full bg-sky-200 flex items-center justify-center">
-                  <FileText size={14} className="text-sky-600" />
-                </div>
-                <div>
-                  <div className="w-12 h-1.5 bg-white rounded" />
-                  <div className="w-8 h-1 bg-white/60 rounded mt-1" />
-                </div>
-              </div>
-              <div className="space-y-1.5">
-                <div className="w-full h-1 bg-white/30 rounded" />
-                <div className="w-full h-1 bg-white/30 rounded" />
-                <div className="w-3/4 h-1 bg-white/30 rounded" />
-              </div>
-            </div>
-          </div>
-        </div>
-      ),
-    },
-  };
+const PRODUCTS = [
+  {
+    id: 'agent-banking',
+    name: 'Agent Banking',
+    description: 'Deploy a network of mobile money agents instantly. Give your institution last-mile reach into every community — fully managed, branded, and compliant.',
+    icon: '🏪',
+  },
+  {
+    id: 'payment-services',
+    name: 'Payment Services',
+    description: 'Multi-channel payment infrastructure covering NUBAN, POS terminals, USSD, and API disbursements. Reliable rails your institution can always depend on.',
+    icon: '💳',
+  },
+  {
+    id: 'lending',
+    name: 'Lending Infrastructure',
+    description: 'End-to-end digital lending: loan origination, credit scoring, disbursement, and repayment tracking. No paperwork. No manual errors. Full audit trail.',
+    icon: '📈',
+  },
+  {
+    id: 'kyc',
+    name: 'Identity & KYC',
+    description: 'Instant customer onboarding with BVN, NIN, and facial verification. Stay CBN-compliant without building it yourself.',
+    icon: '🪪',
+  },
+  {
+    id: 'analytics',
+    name: 'Analytics Dashboard',
+    description: 'Real-time portfolio visibility across all agents, transactions, and loan books. Institutional-grade reporting in a single dashboard.',
+    icon: '📊',
+  },
+  {
+    id: 'core-banking',
+    name: 'Core Banking API',
+    description: "A complete REST API surface for ledger management, account creation, and transaction processing. Build your own products on top of Grupp's infrastructure.",
+    icon: '⚙️',
+  },
+];
 
-  const getInactiveTabs = () => {
-    return Object.values(tabs).filter((tab) => tab.id !== activeTab);
-  };
+function ProductCard({ product }) {
+  return (
+    <div
+      style={{
+        width: '380px',
+        height: '480px',
+        flexShrink: 0,
+        background: '#0A1628',
+        border: '1px solid rgba(61, 170, 255, 0.12)',
+        borderRadius: '24px',
+        padding: '40px 36px',
+        display: 'flex',
+        flexDirection: 'column',
+        transition: 'border-color 300ms ease, box-shadow 300ms ease',
+        cursor: 'default',
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.borderColor = 'rgba(61, 170, 255, 0.4)';
+        e.currentTarget.style.boxShadow = '0 0 40px rgba(0,133,255,0.08)';
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.borderColor = 'rgba(61, 170, 255, 0.12)';
+        e.currentTarget.style.boxShadow = 'none';
+      }}
+    >
+      {/* Icon container */}
+      <div style={{
+        width: '52px',
+        height: '52px',
+        borderRadius: '14px',
+        background: 'rgba(0, 133, 255, 0.1)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '24px',
+        marginBottom: '28px',
+        flexShrink: 0,
+      }}>
+        {product.icon}
+      </div>
+
+      {/* Name */}
+      <h3 style={{
+        fontFamily: 'var(--font-display)',
+        fontWeight: 700,
+        fontSize: '24px',
+        letterSpacing: '-0.02em',
+        color: '#FFFFFF',
+        marginBottom: '16px',
+        lineHeight: 1.2,
+      }}>
+        {product.name}
+      </h3>
+
+      {/* Description */}
+      <p style={{
+        fontFamily: 'var(--font-body)',
+        fontWeight: 400,
+        fontSize: '15px',
+        lineHeight: 1.7,
+        color: '#8FAEC8',
+        flex: 1,
+      }}>
+        {product.description}
+      </p>
+
+      {/* Learn more */}
+      <a
+        href="#"
+        style={{
+          fontFamily: 'var(--font-body)',
+          fontWeight: 600,
+          fontSize: '14px',
+          color: '#3DAAFF',
+          textDecoration: 'none',
+          marginTop: '32px',
+          transition: 'color 200ms ease',
+        }}
+        onMouseEnter={e => (e.currentTarget.style.color = '#0085FF')}
+        onMouseLeave={e => (e.currentTarget.style.color = '#3DAAFF')}
+      >
+        Learn more →
+      </a>
+    </div>
+  );
+}
+
+export default function ProductsSection() {
+  const containerRef  = useRef(null);
+  const stickyRef     = useRef(null);
+  const trackRef      = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const reducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    // Mobile: skip GSAP horizontal scroll
+    if (window.matchMedia('(max-width: 768px)').matches) return;
+    if (reducedMotion) return;
+
+    const ctx = gsap.context(() => {
+      const track      = trackRef.current;
+      const totalCards = PRODUCTS.length;
+
+      // Calculate how far to scroll horizontally
+      const getScrollAmount = () => {
+        const cardWidth = 380 + 32; // card width + gap
+        return -(cardWidth * (totalCards - 1.5));
+      };
+
+      ScrollTrigger.create({
+        trigger: containerRef.current,
+        start:   'top top',
+        end:     () => `+=${Math.abs(getScrollAmount()) + window.innerWidth}`,
+        pin:     stickyRef.current,
+        scrub:   1,
+        onUpdate: (self) => {
+          // Scroll-linked progress dots
+          const index = Math.min(
+            Math.floor(self.progress * totalCards),
+            totalCards - 1
+          );
+          setActiveIndex(index);
+        },
+        animation: gsap.to(track, {
+          x: getScrollAmount,
+          ease: 'none',
+        }),
+      });
+    });
+
+    return () => ctx.revert();
+  }, [reducedMotion]);
 
   return (
-    <section className="py-24 px-6 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white overflow-hidden">
-      <FadeSlideUp>
-        <div className="max-w-7xl mx-auto">
-        
-        {/* Title */}
-        <h2 className="text-3xl font-extrabold tracking-tight mb-12">
-          Unlock <span className="text-sky-500">Custom-Built</span> Tools
-        </h2>
+    <section
+      id="products"
+      ref={containerRef}
+      style={{
+        position: 'relative',
+        background: '#050D1A',
+        height: reducedMotion ? 'auto' : '500vh',
+      }}
+    >
+      {/* Sticky viewport wrapper */}
+      <div
+        ref={stickyRef}
+        style={{
+          position: reducedMotion ? 'relative' : 'sticky',
+          top: 0,
+          height: '100vh',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        }}
+      >
+        {/* Section header */}
+        <div style={{ padding: '0 48px', marginBottom: '48px' }}>
+          <p className="text-eyebrow" style={{ marginBottom: '12px' }}>The Platform</p>
+          <h2
+            className="text-display-base text-section"
+            style={{ color: '#FFFFFF' }}
+          >
+            Everything your institution needs.
+          </h2>
+        </div>
 
-        {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
-          
-          {/* Active Card - Left (Col Span 2) */}
-          <div className="lg:col-span-2 rounded-3xl bg-[#38BDF8] p-8 md:p-12 text-white flex flex-col md:flex-row gap-8 justify-between items-center shadow-xl shadow-sky-500/10">
-            {/* Text description */}
-            <div className="flex-1 space-y-6">
-              <span className="text-xs uppercase tracking-wider font-bold text-white/80">
-                {tabs[activeTab].title}
-              </span>
-              <h3 className="text-2xl md:text-3xl font-bold leading-tight">
-                {tabs[activeTab].header}
-              </h3>
-              <p className="text-white/90 text-sm leading-relaxed max-w-md">
-                {tabs[activeTab].description}
-              </p>
+        {/* Cards track */}
+        <div
+          ref={trackRef}
+          style={{
+            display: 'flex',
+            gap: '32px',
+            paddingLeft: '48px',
+            paddingRight: '48px',
+            willChange: 'transform',
+          }}
+        >
+          {PRODUCTS.map(product => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
 
-              {/* Action Buttons/Links */}
-              {tabs[activeTab].links ? (
-                <div className="flex gap-4">
-                  {tabs[activeTab].links.map((link) => (
-                    <a
-                      key={link.label}
-                      href={link.href}
-                      className="inline-flex items-center gap-1.5 text-xs font-bold bg-white text-sky-600 px-5 py-2.5 rounded-xl transition-all duration-200 hover:bg-sky-50 shadow-lg hover:-translate-y-px"
-                    >
-                      {link.label}
-                      <ArrowRight size={13} />
-                    </a>
-                  ))}
-                </div>
-              ) : (
-                <button className="inline-flex items-center gap-1.5 text-xs font-bold bg-white text-sky-600 px-5 py-2.5 rounded-xl transition-all duration-200 hover:bg-sky-50 shadow-lg hover:-translate-y-px">
-                  {tabs[activeTab].action}
-                  <ArrowRight size={13} />
-                </button>
-              )}
-            </div>
-
-            {/* Visual Panel */}
-            <div className="w-full md:w-1/2 flex justify-center">
-              {tabs[activeTab].visual}
-            </div>
-          </div>
-
-          {/* Inactive Tab List - Right (Col Span 1) */}
-          <div className="flex flex-col gap-4">
-            {getInactiveTabs().map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className="w-full text-left p-6 rounded-2xl border border-zinc-150 dark:border-zinc-800 bg-[#FAFAFA] dark:bg-zinc-900/50 hover:border-sky-300 dark:hover:border-sky-900 transition-all duration-300 group flex items-start justify-between shadow-sm hover:shadow-md cursor-pointer"
-              >
-                <div className="space-y-2 flex-1 pr-4">
-                  <div className="flex items-center gap-3">
-                    <span className="p-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 group-hover:bg-sky-500/10 group-hover:text-sky-500 transition-colors duration-300">
-                      {tab.icon}
-                    </span>
-                    <h4 className="text-sm font-bold tracking-tight text-zinc-800 dark:text-white group-hover:text-sky-500 transition-colors duration-300">
-                      {tab.title}
-                    </h4>
-                  </div>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                    {tab.preview}
-                  </p>
-                </div>
-                <div className="p-2 rounded-full border border-zinc-200 dark:border-zinc-850 bg-white dark:bg-zinc-900 text-zinc-400 group-hover:text-sky-500 group-hover:border-sky-400 transition-all duration-300 mt-1">
-                  <ArrowRight size={13} />
-                </div>
-              </button>
-            ))}
-          </div>
-
+        {/* Progress dots */}
+        <div style={{
+          display: 'flex',
+          gap: '8px',
+          justifyContent: 'center',
+          alignItems: 'center',
+          paddingTop: '40px',
+          paddingBottom: '24px',
+        }}>
+          {PRODUCTS.map((_, i) => (
+            <div
+              key={i}
+              style={{
+                height: '8px',
+                borderRadius: '100px',
+                background: i === activeIndex ? '#0085FF' : '#1A3A6B',
+                width: i === activeIndex ? '24px' : '8px',
+                transition: 'all 300ms ease',
+              }}
+            />
+          ))}
         </div>
       </div>
-      </FadeSlideUp>
+
+      {/* Mobile layout override */}
+      <style>{`
+        @media (max-width: 768px) {
+          #products {
+            height: auto !important;
+          }
+          #products > div {
+            position: relative !important;
+            height: auto !important;
+            overflow: visible !important;
+          }
+          #products .products-track {
+            flex-direction: column !important;
+            padding: 0 24px !important;
+          }
+          #products .products-track > div {
+            width: 100% !important;
+            height: 280px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

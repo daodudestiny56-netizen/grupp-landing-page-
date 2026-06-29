@@ -1,69 +1,110 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Sun, Moon, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
-export default function Nav({ darkMode, setDarkMode }) {
+export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 16);
+    const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   return (
-    <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[92%] max-w-4xl z-50">
+    <nav
+      className="fixed top-6 left-1/2 -translate-x-1/2 w-[92%] max-w-4xl z-50"
+      style={{ transition: 'all 0.3s ease' }}
+    >
       <div
-        className={`w-full flex items-center justify-between py-2 px-3 sm:px-5 rounded-full border transition-all duration-300 backdrop-blur-xl ${
-          darkMode
-            ? 'bg-zinc-950/90 border-zinc-850 shadow-2xl shadow-black/50'
-            : 'bg-white/90 border-zinc-200 shadow-xl shadow-zinc-900/5'
-        }`}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '10px 20px',
+          borderRadius: '100px',
+          border: scrolled
+            ? '1px solid rgba(61, 170, 255, 0.15)'
+            : '1px solid rgba(61, 170, 255, 0.08)',
+          background: scrolled
+            ? 'rgba(5, 13, 26, 0.75)'
+            : 'transparent',
+          backdropFilter: scrolled ? 'blur(20px)' : 'none',
+          WebkitBackdropFilter: scrolled ? 'blur(20px)' : 'none',
+          transition: 'all 0.3s ease',
+        }}
       >
         {/* Logo */}
-        <a href="/" className="flex items-center pl-2">
-          <span className={`font-black text-lg sm:text-xl tracking-tighter ${darkMode ? 'text-white' : 'text-zinc-950'}`}>
-            grupp<span className="text-sky-500">.</span>
+        <a href="/" style={{ display: 'flex', alignItems: 'center', paddingLeft: '4px' }}>
+          <span
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontWeight: 800,
+              fontSize: '20px',
+              letterSpacing: '-0.03em',
+              color: '#FFFFFF',
+            }}
+          >
+            grupp
+            <span style={{ color: '#0085FF' }}>.</span>
           </span>
         </a>
 
-        {/* Center links */}
-        <div className={`hidden md:flex items-center gap-8 text-xs sm:text-sm font-semibold ${darkMode ? 'text-zinc-400' : 'text-zinc-500'}`}>
-          {['Home', 'Products'].map((link) => (
+        {/* Center nav links */}
+        <div
+          className="hidden md:flex"
+          style={{ gap: '32px', alignItems: 'center' }}
+        >
+          {[
+            { label: 'Home', href: '#' },
+            { label: 'Products', href: '#products' },
+            { label: 'Why Grupp', href: '#why-grupp' },
+          ].map(({ label, href }) => (
             <a
-              key={link}
-              href={link === 'Home' ? '#' : `#${link.toLowerCase().replace(/\s+/g, '-')}`}
-              className="hover:text-sky-500 transition-colors duration-200"
+              key={label}
+              href={href}
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontWeight: 500,
+                fontSize: '14px',
+                color: '#8FAEC8',
+                textDecoration: 'none',
+                transition: 'color 200ms ease',
+              }}
+              onMouseEnter={e => (e.target.style.color = '#FFFFFF')}
+              onMouseLeave={e => (e.target.style.color = '#8FAEC8')}
             >
-              {link}
+              {label}
             </a>
           ))}
         </div>
 
-        {/* Right controls */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setDarkMode(!darkMode)}
-            className={`p-2 rounded-full border transition-all duration-200 ${
-              darkMode
-                ? 'border-zinc-850 hover:bg-zinc-900 text-amber-400'
-                : 'border-zinc-200 hover:bg-zinc-50 text-zinc-650'
-            }`}
-            aria-label="Toggle theme"
-          >
-            {darkMode ? <Sun size={14} /> : <Moon size={14} />}
-          </button>
-
-          <Link
-            href="#"
-            className="flex items-center gap-1.5 bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs px-4 py-2 rounded-full transition-all duration-200 shadow-lg shadow-sky-500/20 hover:shadow-sky-400/30 hover:-translate-y-px"
-          >
-            Get Started
-            <ArrowRight size={13} />
-          </Link>
-        </div>
+        {/* CTA button */}
+        <Link
+          href="#"
+          style={{
+            fontFamily: 'var(--font-body)',
+            fontWeight: 600,
+            fontSize: '13px',
+            color: '#FFFFFF',
+            background: '#0085FF',
+            borderRadius: '100px',
+            padding: '10px 24px',
+            textDecoration: 'none',
+            transition: 'background 200ms ease, box-shadow 200ms ease',
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.background = '#3DAAFF';
+            e.currentTarget.style.boxShadow = '0 0 24px rgba(0,133,255,0.4)';
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.background = '#0085FF';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          Get Started
+        </Link>
       </div>
     </nav>
   );

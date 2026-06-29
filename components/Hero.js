@@ -1,103 +1,295 @@
 'use client';
 
-import { ArrowRight } from 'lucide-react';
-import Link from 'next/link';
-import { FadeSlideUp } from '@/components/ScrollAnimations';
+import { useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-export default function Hero({ darkMode }) {
+gsap.registerPlugin(ScrollTrigger);
+
+// Page-load stagger timings (ms)
+const LOAD_DELAYS = {
+  eyebrow:  0.20,
+  h1line1:  0.40,
+  h1line2:  0.56,
+  sub:      0.72,
+  buttons:  0.90,
+  visual:   0.60,
+};
+
+function LoadFade({ children, delay = 0, x = 0 }) {
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center pt-28 pb-20 px-6 overflow-hidden">
-      {/* Animated background */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Grid mesh */}
-        <div
-          className={`absolute inset-0 ${darkMode ? 'opacity-[0.03]' : 'opacity-[0.04]'}`}
-          style={{
-            backgroundImage: `linear-gradient(${darkMode ? '#fff' : '#000'} 1px, transparent 1px), linear-gradient(90deg, ${darkMode ? '#fff' : '#000'} 1px, transparent 1px)`,
-            backgroundSize: '64px 64px',
-          }}
-        />
-        {/* Orbs */}
-        <div
-          className={`absolute -top-32 left-1/2 -translate-x-1/2 w-[720px] h-[480px] rounded-full blur-3xl ${
-            darkMode ? 'bg-sky-500/8' : 'bg-sky-400/12'
-          }`}
-          style={{ animation: 'float 8s ease-in-out infinite' }}
-        />
-        <div
-          className={`absolute bottom-0 -right-40 w-[400px] h-[400px] rounded-full blur-3xl ${
-            darkMode ? 'bg-sky-500/5' : 'bg-sky-300/15'
-          }`}
-          style={{ animation: 'float 12s ease-in-out infinite reverse' }}
-        />
+    <motion.div
+      initial={{ opacity: 0, y: 24, x }}
+      animate={{ opacity: 1, y: 0, x: 0 }}
+      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+export default function Hero() {
+  const textBlockRef = useRef(null);
+  const sectionRef   = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Hero text block scales up and fades out as user scrolls
+      // The Marquee section sits at z-index 3 and slides OVER this
+      gsap.to(textBlockRef.current, {
+        scale:   1.15,
+        opacity: 0,
+        ease:    'none',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start:   'top top',
+          end:     'bottom top',
+          scrub:   1,
+        },
+      });
+    });
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      id="hero"
+      style={{
+        position: 'relative',
+        minHeight: '100vh',
+        background: '#050D1A',
+        overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+      }}
+    >
+      {/* Atmospheric radial glow — left side behind text */}
+      <div
+        aria-hidden
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'radial-gradient(ellipse 60% 50% at 20% 50%, rgba(0,133,255,0.12) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }}
+      />
+
+      {/* Main content grid */}
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 2,
+          width: '100%',
+          maxWidth: '1280px',
+          margin: '0 auto',
+          padding: '120px 48px 80px',
+          display: 'grid',
+          gridTemplateColumns: '55fr 45fr',
+          gap: '64px',
+          alignItems: 'center',
+        }}
+        className="hero-grid"
+      >
+        {/* ── LEFT COLUMN: Text content ── */}
+        <div ref={textBlockRef} style={{ position: 'relative', zIndex: 2, willChange: 'transform, opacity' }}>
+
+          {/* Eyebrow label */}
+          <LoadFade delay={LOAD_DELAYS.eyebrow}>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: 'rgba(0, 133, 255, 0.1)',
+              border: '1px solid rgba(0, 133, 255, 0.3)',
+              borderRadius: '100px',
+              padding: '6px 14px',
+              marginBottom: '32px',
+            }}>
+              <span
+                style={{
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  background: '#0085FF',
+                  flexShrink: 0,
+                }}
+                className="animate-pulse-dot"
+              />
+              <span className="text-eyebrow">Community Banking as a Service</span>
+            </div>
+          </LoadFade>
+
+          {/* H1 */}
+          <div style={{ marginBottom: '28px' }}>
+            <LoadFade delay={LOAD_DELAYS.h1line1}>
+              <h1
+                className="text-display-base text-hero"
+                style={{ color: '#FFFFFF', marginBottom: '4px', display: 'block' }}
+              >
+                Digital Infrastructure
+              </h1>
+            </LoadFade>
+            <LoadFade delay={LOAD_DELAYS.h1line2}>
+              <span
+                className="text-display-base text-hero"
+                style={{ color: '#0085FF', display: 'block' }}
+              >
+                for Communities.
+              </span>
+            </LoadFade>
+          </div>
+
+          {/* Sub-headline */}
+          <LoadFade delay={LOAD_DELAYS.sub}>
+            <p style={{
+              fontFamily: 'var(--font-body)',
+              fontWeight: 400,
+              fontSize: '18px',
+              lineHeight: 1.75,
+              color: '#8FAEC8',
+              maxWidth: '480px',
+              marginBottom: '48px',
+            }}>
+              Our platform empowers community banks and microfinance institutions with
+              digitized financial tools — tailored, branded, and built for the people
+              most financial services leave behind.
+            </p>
+          </LoadFade>
+
+          {/* CTA buttons */}
+          <LoadFade delay={LOAD_DELAYS.buttons}>
+            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+              <a
+                href="#"
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  fontWeight: 600,
+                  fontSize: '15px',
+                  color: '#FFFFFF',
+                  background: '#0085FF',
+                  borderRadius: '12px',
+                  padding: '16px 32px',
+                  textDecoration: 'none',
+                  transition: 'background 200ms ease, box-shadow 200ms ease',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.background = '#3DAAFF';
+                  e.currentTarget.style.boxShadow = '0 0 32px rgba(0,133,255,0.4)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = '#0085FF';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                Start Building Free →
+              </a>
+              <a
+                href="#"
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  fontWeight: 600,
+                  fontSize: '15px',
+                  color: '#FFFFFF',
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  borderRadius: '12px',
+                  padding: '16px 32px',
+                  textDecoration: 'none',
+                  transition: 'border-color 200ms ease',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.25)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; }}
+              >
+                View Documentation
+              </a>
+            </div>
+          </LoadFade>
+        </div>
+
+        {/* ── RIGHT COLUMN: Phone mockup ── */}
+        <LoadFade delay={LOAD_DELAYS.visual} x={40}>
+          <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            {/* Glow behind phone */}
+            <div
+              aria-hidden
+              style={{
+                position: 'absolute',
+                width: '320px',
+                height: '320px',
+                borderRadius: '50%',
+                background: '#0085FF',
+                opacity: 0.15,
+                filter: 'blur(80px)',
+                pointerEvents: 'none',
+              }}
+            />
+            {/* Phone image */}
+            <div className="animate-float-phone" style={{ position: 'relative', zIndex: 1 }}>
+              <Image
+                src="/phone-mockup.png"
+                alt="Grupp agent banking interface on mobile"
+                width={340}
+                height={480}
+                style={{ borderRadius: '24px', objectFit: 'contain', maxWidth: '100%' }}
+                priority
+              />
+            </div>
+          </div>
+        </LoadFade>
       </div>
 
-      <div className="relative z-10 flex flex-col items-center text-center max-w-5xl mx-auto w-full">
-        {/* Badge */}
-        <FadeSlideUp delay={0}>
-          <div
-            className={`inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full border mb-8 ${
-              darkMode
-                ? 'bg-zinc-900/60 border-zinc-800 text-sky-400'
-                : 'bg-sky-50 border-sky-100 text-sky-700'
-            }`}
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />
-            Community Banking as a Service
-          </div>
-        </FadeSlideUp>
-
-        {/* Headline */}
-        <h1
-          className={`text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.07] mb-6 focus-in-contract ${
-            darkMode ? 'text-white' : 'text-zinc-950'
-          }`}
+      {/* Scroll indicator */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '32px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '6px',
+          zIndex: 2,
+        }}
+      >
+        <span style={{
+          fontFamily: 'var(--font-body)',
+          fontWeight: 400,
+          fontSize: '11px',
+          color: '#8FAEC8',
+          letterSpacing: '0.08em',
+        }}>
+          scroll to explore
+        </span>
+        <svg
+          className="animate-scroll-bounce"
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          aria-hidden
         >
-          Digital Platform
-          <br />
-          <span
-            className="font-serif italic font-normal bg-gradient-to-r from-sky-500 to-sky-400 bg-clip-text text-transparent"
-            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
-          >
-            for Community Banks.
-          </span>
-        </h1>
-
-        {/* Sub */}
-        <FadeSlideUp delay={0.2}>
-          <p
-            className={`text-base md:text-lg max-w-2xl leading-relaxed mb-10 ${
-              darkMode ? 'text-zinc-400' : 'text-zinc-500'
-            }`}
-          >
-            Our platform as a service empowers community banks with a variety of digitized
-            financial tools tailored to customers' needs in their brand.
-          </p>
-        </FadeSlideUp>
-
-        {/* CTAs */}
-        <FadeSlideUp delay={0.3}>
-          <div className="flex flex-col sm:flex-row gap-4 mb-12">
-            <Link
-              href="#"
-              className="flex items-center justify-center gap-2 px-7 py-3.5 bg-sky-500 hover:bg-sky-400 text-white font-semibold text-sm rounded-xl transition-all duration-200 shadow-lg shadow-sky-500/30 hover:-translate-y-px hover:shadow-sky-400/40"
-            >
-              Start Building Free
-              <ArrowRight size={15} />
-            </Link>
-            <button
-              className={`flex items-center justify-center px-7 py-3.5 font-semibold text-sm rounded-xl border transition-all duration-200 ${
-                darkMode
-                  ? 'border-zinc-800 text-zinc-300 hover:bg-zinc-900 hover:border-zinc-700'
-                  : 'border-zinc-200 text-zinc-650 hover:bg-zinc-50 hover:border-zinc-300'
-              }`}
-            >
-              View Documentation
-            </button>
-          </div>
-        </FadeSlideUp>
-
+          <path d="M8 3L8 13M8 13L4 9M8 13L12 9" stroke="#8FAEC8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
       </div>
+
+      {/* Mobile responsive styles */}
+      <style>{`
+        @media (max-width: 768px) {
+          .hero-grid {
+            grid-template-columns: 1fr !important;
+            padding: 100px 24px 60px !important;
+            gap: 40px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

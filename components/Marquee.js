@@ -6,41 +6,43 @@ const PARTNERS = [
   'Aso Savings', 'Fortis MFB', 'Parallex Bank', 'Advans MFB', 'NPF MFB',
 ];
 
-function Track({ reverse, darkMode }) {
+function Track({ reverse }) {
   const items = [...PARTNERS, ...PARTNERS, ...PARTNERS];
   return (
-    <div className="overflow-hidden relative">
-      {/* Fade masks */}
+    <div
+      style={{
+        overflow: 'hidden',
+        position: 'relative',
+        maskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
+        WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
+      }}
+    >
       <div
-        className={`absolute left-0 top-0 bottom-0 w-28 z-10 pointer-events-none ${
-          darkMode
-            ? 'bg-gradient-to-r from-zinc-950 to-transparent'
-            : 'bg-gradient-to-r from-[#FAFAFA] to-transparent'
-        }`}
-      />
-      <div
-        className={`absolute right-0 top-0 bottom-0 w-28 z-10 pointer-events-none ${
-          darkMode
-            ? 'bg-gradient-to-l from-zinc-950 to-transparent'
-            : 'bg-gradient-to-l from-[#FAFAFA] to-transparent'
-        }`}
-      />
-
-      <div
-        className="flex gap-4 w-max"
         style={{
-          animation: `${reverse ? 'marquee-reverse' : 'marquee'} 38s linear infinite`,
+          display: 'flex',
+          gap: '12px',
+          width: 'max-content',
+          animation: `${reverse ? 'marquee-reverse' : 'marquee'} 35s linear infinite`,
           willChange: 'transform',
         }}
+        onMouseEnter={e => (e.currentTarget.style.animationPlayState = 'paused')}
+        onMouseLeave={e => (e.currentTarget.style.animationPlayState = 'running')}
       >
         {items.map((name, i) => (
           <div
             key={i}
-            className={`flex-shrink-0 px-5 py-2.5 rounded-xl border text-sm font-semibold tracking-tight whitespace-nowrap transition-colors duration-300 ${
-              darkMode
-                ? 'border-zinc-800 text-zinc-500 bg-zinc-900/40'
-                : 'border-zinc-100 text-zinc-400 bg-white'
-            }`}
+            style={{
+              flexShrink: 0,
+              padding: '8px 20px',
+              borderRadius: '100px',
+              border: '1px solid rgba(255,255,255,0.07)',
+              background: 'rgba(255,255,255,0.04)',
+              fontFamily: 'var(--font-body)',
+              fontWeight: 500,
+              fontSize: '13px',
+              color: '#8FAEC8',
+              whiteSpace: 'nowrap',
+            }}
           >
             {name}
           </div>
@@ -50,18 +52,37 @@ function Track({ reverse, darkMode }) {
   );
 }
 
-export default function Marquee({ darkMode }) {
+export default function Marquee() {
   return (
-    <section className={`py-16 border-y space-y-4 ${darkMode ? 'border-zinc-900' : 'border-zinc-100'}`}>
+    <section
+      style={{
+        position: 'relative',
+        zIndex: 3,
+        background: '#0A1628',
+        borderTop: '1px solid rgba(61, 170, 255, 0.1)',
+        borderBottom: '1px solid rgba(61, 170, 255, 0.1)',
+        padding: '40px 0',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '16px',
+      }}
+    >
       <p
-        className={`text-center text-[11px] font-semibold tracking-widest uppercase mb-8 ${
-          darkMode ? 'text-zinc-600' : 'text-zinc-400'
-        }`}
+        style={{
+          textAlign: 'center',
+          fontFamily: 'var(--font-body)',
+          fontWeight: 600,
+          fontSize: '11px',
+          letterSpacing: '0.15em',
+          textTransform: 'uppercase',
+          color: '#8FAEC8',
+          marginBottom: '16px',
+        }}
       >
         Trusted by 120+ financial institutions across Africa
       </p>
-      <Track reverse={false} darkMode={darkMode} />
-      <Track reverse={true} darkMode={darkMode} />
+      <Track reverse={false} />
+      <Track reverse={true} />
     </section>
   );
 }
