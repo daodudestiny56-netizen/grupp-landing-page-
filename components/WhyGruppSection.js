@@ -1,7 +1,7 @@
 'use client';
 
 import { Sparkles, Zap, ShieldCheck, Heart } from 'lucide-react';
-import { FadeSlideUp } from '@/components/ScrollAnimations';
+import { FadeSlideUp, SlideInRight } from '@/components/ScrollAnimations';
 
 export default function WhyGruppSection() {
   const points = [
@@ -61,7 +61,7 @@ export default function WhyGruppSection() {
         {/* Content Layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           {points.map((point, i) => (
-            <FadeSlideUp key={point.title} delay={i * 0.1}>
+            <SlideInRight key={point.title} delay={i * 0.1}>
               <div
                 className="flex gap-5 items-start p-5 rounded-2xl bg-white/[0.01] border border-white/5 hover:border-sky-500/20 hover:bg-white/[0.03] transition-all duration-350 hover:-translate-y-1 group h-full"
               >
@@ -77,7 +77,7 @@ export default function WhyGruppSection() {
                   </p>
                 </div>
               </div>
-            </FadeSlideUp>
+            </SlideInRight>
           ))}
         </div>
       </div>

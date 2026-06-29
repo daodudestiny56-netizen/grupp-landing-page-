@@ -105,3 +105,20 @@ export function LetterSplit({ text, delayOffset = 0 }) {
     </span>
   );
 }
+
+// 6. SLIDE IN RIGHT
+export function SlideInRight({ children, delay = 0 }) {
+  const { ref, isInView } = useSection();
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, x: 120 }}
+      animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 120 }}
+      transition={{ duration: 0.6, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
+      className="will-change-transform"
+    >
+      {children}
+    </motion.div>
+  );
+}
