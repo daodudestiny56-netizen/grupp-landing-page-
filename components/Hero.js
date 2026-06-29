@@ -48,22 +48,20 @@ export default function Hero({ darkMode }) {
         </FadeSlideUp>
 
         {/* Headline */}
-        <FadeSlideUp delay={0.1}>
-          <h1
-            className={`text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.07] mb-6 focus-in-contract ${
-              darkMode ? 'text-white' : 'text-zinc-950'
-            }`}
+        <h1
+          className={`text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.07] mb-6 focus-in-contract ${
+            darkMode ? 'text-white' : 'text-zinc-950'
+          }`}
+        >
+          Digital Platform
+          <br />
+          <span
+            className="font-serif italic font-normal bg-gradient-to-r from-sky-500 to-sky-400 bg-clip-text text-transparent"
+            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
           >
-            Digital Platform
-            <br />
-            <span
-              className="font-serif italic font-normal bg-gradient-to-r from-sky-500 to-sky-400 bg-clip-text text-transparent"
-              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
-            >
-              for Community Banks.
-            </span>
-          </h1>
-        </FadeSlideUp>
+            for Community Banks.
+          </span>
+        </h1>
 
         {/* Sub */}
         <FadeSlideUp delay={0.2}>
