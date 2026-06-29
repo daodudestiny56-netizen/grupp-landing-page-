@@ -87,6 +87,8 @@ export default function WhyGruppSection() {
     <section
       id="why-grupp"
       style={{
+        position: 'relative',
+        zIndex: 10, /* Fix 6: sits above products section during scroll */
         background: '#050D1A',
         padding: '120px 48px',
       }}

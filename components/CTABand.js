@@ -97,20 +97,21 @@ export default function CTABand() {
         overflow: 'hidden',
       }}
     >
-      {/* Centered radial spotlight glow */}
+      {/* Fix 7: Cinematic radial spotlight glow — always present, animates in on scroll */}
       <div
         ref={glowRef}
         aria-hidden
         style={{
           position: 'absolute',
           inset: 0,
-          background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(0,133,255,0.15) 0%, transparent 65%)',
+          background: 'radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0,133,255,0.13) 0%, transparent 65%)',
           pointerEvents: 'none',
+          zIndex: 0,
           opacity: reducedMotion ? 1 : 0,
         }}
       />
 
-      <div style={{ position: 'relative', zIndex: 2 }}>
+      <div style={{ position: 'relative', zIndex: 1 }}>
         {/* Eyebrow */}
         <p className="text-eyebrow" style={{ marginBottom: '24px' }}>Ready to launch?</p>
 

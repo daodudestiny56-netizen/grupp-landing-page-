@@ -8,14 +8,13 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Page-load stagger timings (ms)
 const LOAD_DELAYS = {
-  eyebrow:  0.20,
-  h1line1:  0.40,
-  h1line2:  0.56,
-  sub:      0.72,
-  buttons:  0.90,
-  visual:   0.60,
+  eyebrow: 0.20,
+  h1line1: 0.40,
+  h1line2: 0.56,
+  sub:     0.72,
+  buttons: 0.90,
+  visual:  0.60,
 };
 
 function LoadFade({ children, delay = 0, x = 0 }) {
@@ -36,8 +35,6 @@ export default function Hero() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Hero text block scales up and fades out as user scrolls
-      // The Marquee section sits at z-index 3 and slides OVER this
       gsap.to(textBlockRef.current, {
         scale:   1.15,
         opacity: 0,
@@ -50,7 +47,6 @@ export default function Hero() {
         },
       });
     });
-
     return () => ctx.revert();
   }, []);
 
@@ -67,37 +63,44 @@ export default function Hero() {
         alignItems: 'center',
       }}
     >
-      {/* Atmospheric radial glow — left side behind text */}
-      <div
-        aria-hidden
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'radial-gradient(ellipse 60% 50% at 20% 50%, rgba(0,133,255,0.12) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }}
-      />
+      {/* Atmospheric radial glow — left behind text */}
+      <div aria-hidden style={{
+        position: 'absolute',
+        inset: 0,
+        background: 'radial-gradient(ellipse 60% 50% at 20% 50%, rgba(0,133,255,0.12) 0%, transparent 70%)',
+        pointerEvents: 'none',
+      }} />
 
       {/* Main content grid */}
       <div
+        className="hero-grid"
         style={{
           position: 'relative',
           zIndex: 2,
           width: '100%',
           maxWidth: '1280px',
           margin: '0 auto',
-          padding: '120px 48px 80px',
+          padding: '120px 64px 100px',
           display: 'grid',
           gridTemplateColumns: '55fr 45fr',
-          gap: '64px',
+          gap: '80px',
           alignItems: 'center',
+          minHeight: '100vh',
         }}
-        className="hero-grid"
       >
-        {/* ── LEFT COLUMN: Text content ── */}
-        <div ref={textBlockRef} style={{ position: 'relative', zIndex: 2, willChange: 'transform, opacity' }}>
-
-          {/* Eyebrow label */}
+        {/* ── LEFT COLUMN ── */}
+        <div
+          ref={textBlockRef}
+          style={{
+            position: 'relative',
+            zIndex: 2,
+            willChange: 'transform, opacity',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+          }}
+        >
+          {/* Eyebrow */}
           <LoadFade delay={LOAD_DELAYS.eyebrow}>
             <div style={{
               display: 'inline-flex',
@@ -106,37 +109,55 @@ export default function Hero() {
               background: 'rgba(0, 133, 255, 0.1)',
               border: '1px solid rgba(0, 133, 255, 0.3)',
               borderRadius: '100px',
-              padding: '6px 14px',
-              marginBottom: '32px',
+              padding: '7px 16px',
+              marginBottom: '36px',
+              width: 'fit-content',
             }}>
               <span
+                className="animate-pulse-dot"
                 style={{
-                  width: '6px',
-                  height: '6px',
+                  width: '7px',
+                  height: '7px',
                   borderRadius: '50%',
                   background: '#0085FF',
                   flexShrink: 0,
                 }}
-                className="animate-pulse-dot"
               />
               <span className="text-eyebrow">Community Banking as a Service</span>
             </div>
           </LoadFade>
 
-          {/* H1 */}
-          <div style={{ marginBottom: '28px' }}>
+          {/* H1 — Fix 2: explicit 88px desktop, 800 weight, -0.03em */}
+          <div style={{ marginBottom: '32px' }}>
             <LoadFade delay={LOAD_DELAYS.h1line1}>
               <h1
-                className="text-display-base text-hero"
-                style={{ color: '#FFFFFF', marginBottom: '4px', display: 'block' }}
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontWeight: 800,
+                  fontSize: 'clamp(52px, 6.5vw, 88px)',
+                  letterSpacing: '-0.03em',
+                  lineHeight: 1.0,
+                  color: '#FFFFFF',
+                  margin: 0,
+                  padding: 0,
+                  display: 'block',
+                }}
               >
                 Digital Infrastructure
               </h1>
             </LoadFade>
             <LoadFade delay={LOAD_DELAYS.h1line2}>
               <span
-                className="text-display-base text-hero"
-                style={{ color: '#0085FF', display: 'block' }}
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontWeight: 800,
+                  fontSize: 'clamp(52px, 6.5vw, 88px)',
+                  letterSpacing: '-0.03em',
+                  lineHeight: 1.0,
+                  color: '#0085FF',
+                  display: 'block',
+                  marginTop: '4px',
+                }}
               >
                 for Communities.
               </span>
@@ -153,14 +174,15 @@ export default function Hero() {
               color: '#8FAEC8',
               maxWidth: '480px',
               marginBottom: '48px',
+              margin: '0 0 48px 0',
             }}>
-              Our platform empowers community banks and microfinance institutions with
-              digitized financial tools — tailored, branded, and built for the people
-              most financial services leave behind.
+              Our platform empowers community banks and microfinance institutions
+              with digitized financial tools — tailored, branded, and built for the
+              people most financial services leave behind.
             </p>
           </LoadFade>
 
-          {/* CTA buttons */}
+          {/* CTAs */}
           <LoadFade delay={LOAD_DELAYS.buttons}>
             <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
               <a
@@ -178,6 +200,7 @@ export default function Hero() {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '8px',
+                  whiteSpace: 'nowrap',
                 }}
                 onMouseEnter={e => {
                   e.currentTarget.style.background = '#3DAAFF';
@@ -203,6 +226,7 @@ export default function Hero() {
                   padding: '16px 32px',
                   textDecoration: 'none',
                   transition: 'border-color 200ms ease',
+                  whiteSpace: 'nowrap',
                 }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.25)'; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; }}
@@ -213,31 +237,40 @@ export default function Hero() {
           </LoadFade>
         </div>
 
-        {/* ── RIGHT COLUMN: Phone mockup ── */}
+        {/* ── RIGHT COLUMN: Phone — Fix 1: no container, raw PNG on dark bg ── */}
         <LoadFade delay={LOAD_DELAYS.visual} x={40}>
-          <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            {/* Glow behind phone */}
+          <div style={{
+            position: 'relative',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+            {/* Large radial glow behind phone — Fix 1 spec */}
+            <div aria-hidden style={{
+              position: 'absolute',
+              width: '480px',
+              height: '480px',
+              background: 'radial-gradient(circle, rgba(0,133,255,0.25) 0%, transparent 70%)',
+              filter: 'blur(60px)',
+              pointerEvents: 'none',
+              zIndex: 0,
+            }} />
+
+            {/* Phone PNG — no border-radius, no container, directly on dark bg */}
             <div
-              aria-hidden
-              style={{
-                position: 'absolute',
-                width: '320px',
-                height: '320px',
-                borderRadius: '50%',
-                background: '#0085FF',
-                opacity: 0.15,
-                filter: 'blur(80px)',
-                pointerEvents: 'none',
-              }}
-            />
-            {/* Phone image */}
-            <div className="animate-float-phone" style={{ position: 'relative', zIndex: 1 }}>
+              className="animate-float-phone"
+              style={{ position: 'relative', zIndex: 1 }}
+            >
               <Image
                 src="/phone-mockup.png"
-                alt="Grupp agent banking interface on mobile"
-                width={340}
-                height={480}
-                style={{ borderRadius: '24px', objectFit: 'contain', maxWidth: '100%' }}
+                alt="Grupp agent banking app interface"
+                width={360}
+                height={520}
+                style={{
+                  objectFit: 'contain',
+                  maxWidth: '100%',
+                  display: 'block',
+                }}
                 priority
               />
             </div>
@@ -246,19 +279,17 @@ export default function Hero() {
       </div>
 
       {/* Scroll indicator */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '32px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '6px',
-          zIndex: 2,
-        }}
-      >
+      <div style={{
+        position: 'absolute',
+        bottom: '32px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '6px',
+        zIndex: 2,
+      }}>
         <span style={{
           fontFamily: 'var(--font-body)',
           fontWeight: 400,
@@ -268,25 +299,30 @@ export default function Hero() {
         }}>
           scroll to explore
         </span>
-        <svg
-          className="animate-scroll-bounce"
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          aria-hidden
-        >
+        <svg className="animate-scroll-bounce" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
           <path d="M8 3L8 13M8 13L4 9M8 13L12 9" stroke="#8FAEC8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </div>
 
-      {/* Mobile responsive styles */}
+      {/* Responsive styles — Fix 10: phone first on mobile, 52px headline */}
       <style>{`
         @media (max-width: 768px) {
           .hero-grid {
             grid-template-columns: 1fr !important;
+            grid-template-rows: auto auto !important;
             padding: 100px 24px 60px !important;
             gap: 40px !important;
+            min-height: auto !important;
+          }
+          /* Phone visual column comes first on mobile */
+          .hero-grid > div:last-child {
+            order: -1 !important;
+          }
+          /* Phone max 320px height on mobile */
+          .hero-grid > div:last-child img {
+            max-height: 320px !important;
+            width: 80% !important;
+            margin: 0 auto !important;
           }
         }
       `}</style>

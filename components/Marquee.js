@@ -20,7 +20,7 @@ function Track({ reverse }) {
       <div
         style={{
           display: 'flex',
-          gap: '12px',
+          gap: '16px',
           width: 'max-content',
           animation: `${reverse ? 'marquee-reverse' : 'marquee'} 35s linear infinite`,
           willChange: 'transform',
@@ -33,13 +33,13 @@ function Track({ reverse }) {
             key={i}
             style={{
               flexShrink: 0,
-              padding: '8px 20px',
+              padding: '10px 24px',
               borderRadius: '100px',
               border: '1px solid rgba(255,255,255,0.07)',
               background: 'rgba(255,255,255,0.04)',
               fontFamily: 'var(--font-body)',
               fontWeight: 500,
-              fontSize: '13px',
+              fontSize: '14px',
               color: '#8FAEC8',
               whiteSpace: 'nowrap',
             }}

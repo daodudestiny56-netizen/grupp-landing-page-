@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useReducedMotion } from 'framer-motion';
@@ -47,6 +47,8 @@ const PRODUCTS = [
 ];
 
 function ProductCard({ product }) {
+  const [hovered, setHovered] = React.useState(false);
+
   return (
     <div
       style={{
@@ -55,28 +57,31 @@ function ProductCard({ product }) {
         flexShrink: 0,
         background: '#0A1628',
         border: '1px solid rgba(61, 170, 255, 0.12)',
+        /* Fix 5: top accent line on hover */
+        borderTop: hovered ? '2px solid #0085FF' : '2px solid transparent',
         borderRadius: '24px',
         padding: '40px 36px',
         display: 'flex',
         flexDirection: 'column',
-        transition: 'border-color 300ms ease, box-shadow 300ms ease',
+        transition: 'border-color 300ms ease, border-top-color 300ms ease, box-shadow 300ms ease',
         cursor: 'default',
       }}
       onMouseEnter={e => {
-        e.currentTarget.style.borderColor = 'rgba(61, 170, 255, 0.4)';
-        e.currentTarget.style.boxShadow = '0 0 40px rgba(0,133,255,0.08)';
+        setHovered(true);
+        e.currentTarget.style.boxShadow = '0 0 40px rgba(0,133,255,0.1)';
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.borderColor = 'rgba(61, 170, 255, 0.12)';
+        setHovered(false);
         e.currentTarget.style.boxShadow = 'none';
       }}
     >
-      {/* Icon container */}
+      {/* Fix 5: icon container with visible background rgba(0,133,255,0.12) */}
       <div style={{
         width: '52px',
         height: '52px',
         borderRadius: '14px',
-        background: 'rgba(0, 133, 255, 0.1)',
+        background: 'rgba(0, 133, 255, 0.12)',
+        border: '1px solid rgba(0, 133, 255, 0.2)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -87,11 +92,11 @@ function ProductCard({ product }) {
         {product.icon}
       </div>
 
-      {/* Name */}
+      {/* Fix 5: title at 26px, Bricolage Grotesque 700 */}
       <h3 style={{
         fontFamily: 'var(--font-display)',
         fontWeight: 700,
-        fontSize: '24px',
+        fontSize: '26px',
         letterSpacing: '-0.02em',
         color: '#FFFFFF',
         marginBottom: '16px',
@@ -186,6 +191,7 @@ export default function ProductsSection() {
       style={{
         position: 'relative',
         background: '#050D1A',
+        zIndex: 1, /* Fix 6: explicit z-index so WhyGrupp can layer over */
         height: reducedMotion ? 'auto' : '500vh',
       }}
     >
@@ -229,14 +235,14 @@ export default function ProductsSection() {
           ))}
         </div>
 
-        {/* Progress dots */}
+        {/* Fix 5: progress dots — 40px gap above, proper spacing */}
         <div style={{
           display: 'flex',
           gap: '8px',
           justifyContent: 'center',
           alignItems: 'center',
-          paddingTop: '40px',
-          paddingBottom: '24px',
+          paddingTop: '48px',
+          paddingBottom: '32px',
         }}>
           {PRODUCTS.map((_, i) => (
             <div
@@ -253,24 +259,27 @@ export default function ProductsSection() {
         </div>
       </div>
 
-      {/* Mobile layout override */}
+      {/* Fix 10: Mobile layout — full-width vertical stack, 280px cards */}
       <style>{`
         @media (max-width: 768px) {
           #products {
             height: auto !important;
           }
-          #products > div {
+          #products > div:first-of-type {
             position: relative !important;
             height: auto !important;
             overflow: visible !important;
+            padding: 60px 0 40px !important;
           }
           #products .products-track {
             flex-direction: column !important;
             padding: 0 24px !important;
+            gap: 20px !important;
           }
           #products .products-track > div {
             width: 100% !important;
             height: 280px !important;
+            border-radius: 20px !important;
           }
         }
       `}</style>
