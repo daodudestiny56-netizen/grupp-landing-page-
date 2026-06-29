@@ -6,7 +6,7 @@ export default function CTABand() {
   return (
     <section className="py-4 px-6">
       <div className="max-w-7xl mx-auto">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 via-emerald-500 to-teal-500 px-8 md:px-16 py-20 text-center shadow-2xl shadow-emerald-500/20">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-sky-600 via-sky-500 to-sky-400 px-8 md:px-16 py-20 text-center shadow-2xl shadow-sky-500/20">
           {/* Decorative rings */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute -top-20 -left-20 w-64 h-64 rounded-full border border-white/10" />
@@ -32,7 +32,7 @@ export default function CTABand() {
               Join 120+ financial institutions already processing billions on Grupp's infrastructure.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="flex items-center justify-center gap-2 px-8 py-4 bg-white text-emerald-600 font-bold text-sm rounded-xl transition-all duration-200 hover:bg-emerald-50 shadow-xl hover:-translate-y-px">
+              <button className="flex items-center justify-center gap-2 px-8 py-4 bg-white text-sky-600 font-bold text-sm rounded-xl transition-all duration-200 hover:bg-sky-50 shadow-xl hover:-translate-y-px">
                 Request a Demo
                 <ArrowRight size={15} />
               </button>

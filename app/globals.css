@@ -1,7 +1,7 @@
-@import "tailwindcss";
-
-/* ── Google Fonts ─────────────────────────────────────── */
+/* ── Google Fonts (must precede tailwindcss import) ──── */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+@import "tailwindcss";
 
 /* ── Base resets ─────────────────────────────────────── */
 *, *::before, *::after {
@@ -19,13 +19,32 @@ body {
 }
 
 /* ── Custom scrollbar ────────────────────────────────── */
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #10b981; border-radius: 99px; }
+* {
+  scrollbar-color: #0ea5e9 transparent;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #0ea5e9;
+  border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0284c7;
+}
 
 /* ── Focus ring ──────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid #10b981;
+  outline: 2px solid #0ea5e9;
   outline-offset: 2px;
 }
 
@@ -44,4 +63,44 @@ body {
 @keyframes float {
   0%, 100% { transform: translateY(0px) scale(1); }
   50%       { transform: translateY(-24px) scale(1.02); }
+}
+
+/* ── Hide scrollbar utility ──────────────────────────── */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* ── Moving background blobs ─────────────────────────── */
+@keyframes blob-1 {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(40px, -60px) scale(1.15); }
+  66% { transform: translate(-30px, 30px) scale(0.9); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes blob-2 {
+  0% { transform: translate(0px, 0px) scale(1); }
+  50% { transform: translate(-60px, 80px) scale(1.1); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes blob-3 {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(50px, 50px) scale(0.95); }
+  66% { transform: translate(-40px, -50px) scale(1.15); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+.animate-blob-1 {
+  animation: blob-1 20s infinite alternate ease-in-out;
+}
+.animate-blob-2 {
+  animation: blob-2 25s infinite alternate ease-in-out;
+}
+.animate-blob-3 {
+  animation: blob-3 22s infinite alternate ease-in-out;
 }
