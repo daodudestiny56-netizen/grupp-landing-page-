@@ -50,7 +50,7 @@ export default function Hero({ darkMode }) {
         {/* Headline */}
         <FadeSlideUp delay={0.1}>
           <h1
-            className={`text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.07] mb-6 ${
+            className={`text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.07] mb-6 focus-in-contract ${
               darkMode ? 'text-white' : 'text-zinc-950'
             }`}
           >
