@@ -14,55 +14,54 @@ export default function Nav({ darkMode, setDarkMode }) {
   }, []);
 
   return (
-    <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[92%] max-w-3xl z-50">
+    <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[92%] max-w-4xl z-50">
       <div
-        className={`w-full flex items-center justify-between py-3 px-4 sm:px-6 rounded-full border transition-all duration-300 backdrop-blur-xl ${
+        className={`w-full flex items-center justify-between py-2 px-3 sm:px-5 rounded-full border transition-all duration-300 backdrop-blur-xl ${
           darkMode
-            ? 'bg-zinc-950/80 border-zinc-800/80 shadow-[0_8px_30px_rgb(0,0,0,0.4)]'
-            : 'bg-white/80 border-zinc-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.08)]'
+            ? 'bg-zinc-950/90 border-zinc-850 shadow-2xl shadow-black/50'
+            : 'bg-white/90 border-zinc-200 shadow-xl shadow-zinc-900/5'
         }`}
       >
         {/* Logo */}
-        <a href="/" className="flex items-center">
-          <span className={`font-black text-xl tracking-tighter ${darkMode ? 'text-white' : 'text-zinc-950'}`}>
+        <a href="/" className="flex items-center pl-2">
+          <span className={`font-black text-lg sm:text-xl tracking-tighter ${darkMode ? 'text-white' : 'text-zinc-950'}`}>
             grupp<span className="text-sky-500">.</span>
           </span>
         </a>
 
         {/* Center links */}
-        <div className={`hidden md:flex items-center gap-8 text-sm font-medium tracking-tight ${darkMode ? 'text-zinc-300' : 'text-zinc-600'}`}>
+        <div className={`hidden md:flex items-center gap-8 text-xs sm:text-sm font-semibold ${darkMode ? 'text-zinc-400' : 'text-zinc-500'}`}>
           {['Home', 'Products'].map((link) => (
             <a
               key={link}
               href={link === 'Home' ? '#' : `#${link.toLowerCase().replace(/\s+/g, '-')}`}
-              className="relative group transition-colors hover:text-sky-500"
+              className="hover:text-sky-500 transition-colors duration-200"
             >
               {link}
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-sky-500 transition-all duration-300 group-hover:w-full rounded-full"></span>
             </a>
           ))}
         </div>
 
         {/* Right controls */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <button
             onClick={() => setDarkMode(!darkMode)}
-            className={`p-2.5 rounded-full transition-all duration-300 ${
+            className={`p-2 rounded-full border transition-all duration-200 ${
               darkMode
-                ? 'hover:bg-zinc-800 text-zinc-400 hover:text-amber-400'
-                : 'hover:bg-zinc-100 text-zinc-500 hover:text-zinc-800'
+                ? 'border-zinc-850 hover:bg-zinc-900 text-amber-400'
+                : 'border-zinc-200 hover:bg-zinc-50 text-zinc-650'
             }`}
             aria-label="Toggle theme"
           >
-            {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+            {darkMode ? <Sun size={14} /> : <Moon size={14} />}
           </button>
 
           <Link
             href="#"
-            className="group flex items-center gap-2 bg-sky-500 hover:bg-sky-400 text-white font-semibold text-sm px-6 py-2.5 rounded-full transition-all duration-300 shadow-md shadow-sky-500/20 hover:shadow-lg hover:shadow-sky-400/40"
+            className="flex items-center gap-1.5 bg-sky-500 hover:bg-sky-400 text-white font-bold text-xs px-4 py-2 rounded-full transition-all duration-200 shadow-lg shadow-sky-500/20 hover:shadow-sky-400/30 hover:-translate-y-px"
           >
             Get Started
-            <ArrowRight size={15} className="transition-transform duration-300 ease-out group-hover:translate-x-1" />
+            <ArrowRight size={13} />
           </Link>
         </div>
       </div>
