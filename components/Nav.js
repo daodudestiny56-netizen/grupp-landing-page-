@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useCallback, useRef, useState } from 'react';
 import { ArrowRight, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 
@@ -18,7 +18,7 @@ export default function Nav({ darkMode }) {
   // Refs for measuring link positions for the sliding underline
   const navRef = useRef(null);
   const linkRefs = useRef({});
-  const [indicator, setIndicator] = useState({ left: 0, width: 0 });
+  const [indicator, setIndicator] = useState(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -26,20 +26,24 @@ export default function Nav({ darkMode }) {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Recalculate indicator position only when something is hovered
-  useEffect(() => {
-    if (!hovered) return;
-    const el = linkRefs.current[hovered];
+  const handleMouseEnter = useCallback((label) => {
+    setHovered(label);
+    const el = linkRefs.current[label];
     const nav = navRef.current;
     if (el && nav) {
       const navRect = nav.getBoundingClientRect();
       const elRect = el.getBoundingClientRect();
       setIndicator({
-        left: elRect.left - navRect.left,
-        width: elRect.width,
+        left: elRect.left - navRect.left + 16,
+        width: elRect.width - 32,
       });
     }
-  }, [hovered]);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setHovered(null);
+    setIndicator(null);
+  }, []);
 
   return (
     <>
@@ -112,7 +116,7 @@ export default function Nav({ darkMode }) {
           <div
             className="hidden md:flex items-center gap-1 relative"
             ref={navRef}
-            onMouseLeave={() => setHovered(null)}
+            onMouseLeave={handleMouseLeave}
           >
             {LINKS.map(({ label, href }) => {
               const isActive = active === label;
@@ -122,7 +126,7 @@ export default function Nav({ darkMode }) {
                   href={href}
                   ref={(el) => { linkRefs.current[label] = el; }}
                   onClick={() => setActive(label)}
-                  onMouseEnter={() => setHovered(label)}
+                  onMouseEnter={() => handleMouseEnter(label)}
                   className={`
                     nav-link relative px-4 py-2 rounded-full
                     text-[14.5px] font-medium leading-none select-none
@@ -139,12 +143,12 @@ export default function Nav({ darkMode }) {
             })}
 
             {/* Sliding underline — only visible on hover */}
-            {hovered && indicator.width > 0 && (
+            {hovered && indicator && (
               <span
                 className="nav-indicator absolute bottom-0.5 h-[2px] rounded-full bg-sky-400"
                 style={{
-                  left: indicator.left + 16,
-                  width: indicator.width - 32,
+                  left: indicator.left,
+                  width: indicator.width,
                 }}
               />
             )}
