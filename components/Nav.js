@@ -30,12 +30,12 @@ export default function Nav({ darkMode, setDarkMode }) {
         </a>
 
         {/* Center links */}
-        <div className={`hidden md:flex items-center gap-6 text-[13px] font-medium tracking-tight ${darkMode ? 'text-zinc-400' : 'text-zinc-500'}`}>
+        <div className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:flex items-center gap-1 text-[15px] font-medium tracking-tight ${darkMode ? 'text-zinc-400' : 'text-zinc-500'}`}>
           {['Home', 'Products'].map((link) => (
             <a
               key={link}
               href={link === 'Home' ? '#' : `#${link.toLowerCase().replace(/\s+/g, '-')}`}
-              className={`transition-colors duration-200 ${darkMode ? 'hover:text-white' : 'hover:text-zinc-900'}`}
+              className={`px-4 py-1.5 rounded-full transition-all duration-300 ${darkMode ? 'hover:text-white hover:bg-white/10' : 'hover:text-zinc-900 hover:bg-black/5'}`}
             >
               {link}
             </a>
