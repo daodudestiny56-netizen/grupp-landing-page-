@@ -28,7 +28,7 @@ export default function WhyGruppSection() {
   ];
 
   return (
-    <section className="relative py-28 px-6 bg-[#09090b] text-white overflow-hidden border-y border-zinc-900">
+    <section className="relative py-28 px-6 bg-transparent text-white overflow-hidden border-y border-zinc-900">
       {/* Sleek Grid Mesh */}
       <div
         className="absolute inset-0 opacity-[0.04] pointer-events-none"

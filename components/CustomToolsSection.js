@@ -115,20 +115,22 @@ export default function CustomToolsSection() {
   };
 
   return (
-    <section className="py-24 px-6 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white overflow-hidden">
+    <section className="py-24 px-6 bg-transparent text-white overflow-hidden">
       <FadeSlideUp>
         <div className="max-w-7xl mx-auto">
         
         {/* Title */}
-        <h2 className="text-3xl font-extrabold tracking-tight mb-12">
-          Unlock <span className="text-sky-500">Custom-Built</span> Tools
-        </h2>
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight">
+            Unlock <span className="text-sky-500">Custom-Built</span> Tools
+          </h2>
+        </div>
 
         {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
           
-          {/* Active Card - Left (Col Span 2) */}
-          <div className="lg:col-span-2 rounded-3xl bg-[#38BDF8] p-8 md:p-12 text-white flex flex-col md:flex-row gap-8 justify-between items-center shadow-xl shadow-sky-500/10">
+          {/* Active Card - Left */}
+          <div className="lg:col-span-7 xl:col-span-8 rounded-3xl bg-[#38BDF8] p-8 md:p-12 text-white flex flex-col md:flex-row gap-8 justify-between items-center shadow-xl shadow-sky-500/10">
             {/* Text description */}
             <div className="flex-1 space-y-6">
               <span className="text-xs uppercase tracking-wider font-bold text-white/80">
@@ -169,28 +171,28 @@ export default function CustomToolsSection() {
             </div>
           </div>
 
-          {/* Inactive Tab List - Right (Col Span 1) */}
-          <div className="flex flex-col gap-4">
+          {/* Inactive Tab List - Right */}
+          <div className="lg:col-span-5 xl:col-span-4 flex flex-col gap-5 justify-center h-full">
             {getInactiveTabs().map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className="w-full text-left p-6 rounded-2xl border border-zinc-150 dark:border-zinc-800 bg-[#FAFAFA] dark:bg-zinc-900/50 hover:border-sky-300 dark:hover:border-sky-900 transition-all duration-300 group flex items-start justify-between shadow-sm hover:shadow-md cursor-pointer"
+                className="w-full text-left p-6 rounded-2xl border border-zinc-800 bg-zinc-900/50 hover:border-sky-900 transition-all duration-300 group flex items-start justify-between shadow-sm hover:shadow-md cursor-pointer"
               >
                 <div className="space-y-2 flex-1 pr-4">
                   <div className="flex items-center gap-3">
-                    <span className="p-2.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 group-hover:bg-sky-500/10 group-hover:text-sky-500 transition-colors duration-300">
+                    <span className="p-2.5 rounded-xl bg-zinc-800 group-hover:bg-sky-500/10 group-hover:text-sky-500 transition-colors duration-300">
                       {tab.icon}
                     </span>
-                    <h4 className="text-sm font-bold tracking-tight text-zinc-800 dark:text-white group-hover:text-sky-500 transition-colors duration-300">
+                    <h4 className="text-sm font-bold tracking-tight text-white group-hover:text-sky-500 transition-colors duration-300">
                       {tab.title}
                     </h4>
                   </div>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                  <p className="text-xs text-zinc-400 leading-relaxed">
                     {tab.preview}
                   </p>
                 </div>
-                <div className="p-2 rounded-full border border-zinc-200 dark:border-zinc-850 bg-white dark:bg-zinc-900 text-zinc-400 group-hover:text-sky-500 group-hover:border-sky-400 transition-all duration-300 mt-1">
+                <div className="p-2 rounded-full border border-zinc-850 bg-zinc-900 text-zinc-400 group-hover:text-sky-500 group-hover:border-sky-400 transition-all duration-300 mt-1">
                   <ArrowRight size={13} />
                 </div>
               </button>
