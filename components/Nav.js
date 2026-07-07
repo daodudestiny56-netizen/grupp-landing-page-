@@ -14,7 +14,7 @@ export default function Nav({ darkMode, setDarkMode }) {
   }, []);
 
   return (
-    <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[92%] max-w-4xl z-50">
+    <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[92%] max-w-3xl z-50">
       <div
         className={`w-full flex items-center justify-between py-2 px-3 sm:px-5 rounded-full border transition-all duration-300 backdrop-blur-xl ${
           darkMode
