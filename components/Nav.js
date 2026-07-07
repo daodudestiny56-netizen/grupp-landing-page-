@@ -5,10 +5,8 @@ import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Nav({ darkMode, setDarkMode }) {
-  const [scrolled, setScrolled] = useState(false);
-
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 16);
+    const onScroll = () => {};
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -16,47 +14,49 @@ export default function Nav({ darkMode, setDarkMode }) {
   const dark = darkMode;
 
   return (
-    <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[92%] max-w-[620px] z-50">
+    <nav className="fixed top-5 left-0 right-0 z-50 flex justify-center px-4">
       <div
-        className={`flex items-center h-12 px-4 rounded-full border transition-all duration-300 backdrop-blur-md ${
+        className={`inline-flex items-center gap-6 px-4 py-2.5 rounded-full border transition-all duration-300 backdrop-blur-md ${
           dark
-            ? 'bg-zinc-950/70 border-zinc-800/60 shadow-xl shadow-black/50'
-            : 'bg-white/70 border-zinc-200/60 shadow-lg shadow-black/5'
+            ? 'bg-zinc-950/80 border-zinc-800/70 shadow-xl shadow-black/50'
+            : 'bg-white/80 border-zinc-200/70 shadow-lg shadow-black/8'
         }`}
       >
-        {/* Logo — left */}
-        <div className="flex-1 flex items-center">
-          <a href="/" className="pl-1">
-            <span className={`font-black text-lg tracking-tighter leading-none ${dark ? 'text-white' : 'text-zinc-950'}`}>
-              grupp<span className="text-sky-500">.</span>
-            </span>
-          </a>
-        </div>
+        {/* Logo */}
+        <a href="/" className="flex items-center shrink-0">
+          <span className={`font-black text-[17px] tracking-tighter leading-none ${dark ? 'text-white' : 'text-zinc-950'}`}>
+            grupp<span className="text-sky-500">.</span>
+          </span>
+        </a>
 
-        {/* Nav links — center */}
-        <div className="flex items-center gap-6">
-          {['Home', 'Products'].map((link) => (
-            <a
-              key={link}
-              href={link === 'Home' ? '#' : `#${link.toLowerCase()}`}
-              className={`relative group text-[14px] font-medium leading-none ${dark ? 'text-zinc-400 hover:text-white' : 'text-zinc-500 hover:text-zinc-900'} transition-colors duration-200`}
-            >
-              {link}
-              <span className="absolute left-0 top-full mt-1 w-0 h-[2px] bg-sky-500 rounded-full transition-all duration-300 group-hover:w-full" />
-            </a>
-          ))}
-        </div>
+        {/* Divider */}
+        <div className={`w-px h-4 shrink-0 ${dark ? 'bg-zinc-700' : 'bg-zinc-200'}`} />
 
-        {/* CTA — right */}
-        <div className="flex-1 flex items-center justify-end">
-          <Link
-            href="#"
-            className="group flex items-center gap-1.5 bg-sky-500 hover:bg-sky-400 text-white font-semibold text-[13px] px-5 py-2 rounded-full transition-all duration-300 shadow-md shadow-sky-500/20 hover:shadow-lg hover:shadow-sky-400/30"
+        {/* Nav links */}
+        {['Home', 'Products'].map((link) => (
+          <a
+            key={link}
+            href={link === 'Home' ? '#' : `#${link.toLowerCase()}`}
+            className={`relative group text-[13px] font-medium leading-none shrink-0 transition-colors duration-200 ${
+              dark ? 'text-zinc-400 hover:text-white' : 'text-zinc-500 hover:text-zinc-900'
+            }`}
           >
-            Get Started
-            <ArrowRight size={13} className="transition-transform duration-300 group-hover:translate-x-0.5" />
-          </Link>
-        </div>
+            {link}
+            <span className="absolute left-0 top-full mt-[5px] w-0 h-[1.5px] bg-sky-500 rounded-full transition-all duration-300 group-hover:w-full" />
+          </a>
+        ))}
+
+        {/* Divider */}
+        <div className={`w-px h-4 shrink-0 ${dark ? 'bg-zinc-700' : 'bg-zinc-200'}`} />
+
+        {/* CTA */}
+        <Link
+          href="#"
+          className="group inline-flex items-center gap-1 bg-sky-500 hover:bg-sky-400 text-white font-semibold text-[12px] px-3.5 py-1.5 rounded-full transition-all duration-300 shadow-sm shadow-sky-500/30 shrink-0"
+        >
+          Get Started
+          <ArrowRight size={11} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+        </Link>
       </div>
     </nav>
   );
