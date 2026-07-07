@@ -68,7 +68,7 @@ export default function Hero() {
         </FadeSlideUp>
 
         {/* Headline */}
-        <h1 className="text-[clamp(48px,7vw,96px)] font-extrabold tracking-[-0.03em] leading-[1.0] mb-6 focus-in-contract text-white">
+        <h1 className="text-[clamp(40px,5vw,80px)] font-extrabold tracking-[-0.03em] leading-[1.0] mb-6 focus-in-contract text-white">
           Digital Platform
           <br />
           <span
@@ -81,7 +81,7 @@ export default function Hero() {
 
         {/* Sub */}
         <FadeSlideUp delay={0.2}>
-          <p className="text-[clamp(15px,1.5vw,18px)] max-w-[320px] md:max-w-2xl leading-[1.75] mb-10 text-zinc-400 mx-auto">
+          <p className="text-[clamp(14px,1.2vw,17px)] max-w-[320px] md:max-w-2xl leading-[1.75] mb-10 text-zinc-400 mx-auto">
             Our platform as a service empowers community banks with a variety of digitized
             financial tools tailored to customers' needs in their brand.
           </p>
