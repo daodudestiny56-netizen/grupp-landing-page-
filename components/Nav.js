@@ -1,13 +1,24 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Menu, X } from 'lucide-react';
 import Link from 'next/link';
+
+const LINKS = [
+  { label: 'Home', href: '#' },
+  { label: 'Products', href: '#products' },
+];
 
 export default function Nav({ darkMode }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [activeLink, setActiveLink] = useState('Home');
+  const [active, setActive] = useState('Home');
+  const [hovered, setHovered] = useState(null);
+
+  // Refs for measuring link positions for the sliding underline
+  const navRef = useRef(null);
+  const linkRefs = useRef({});
+  const [indicator, setIndicator] = useState({ left: 0, width: 0 });
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -15,155 +26,182 @@ export default function Nav({ darkMode }) {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const links = [
-    { label: 'Home', href: '#' },
-    { label: 'Products', href: '#products' },
-  ];
+  // Recalculate indicator position whenever hovered or active changes
+  useEffect(() => {
+    const target = hovered || active;
+    const el = linkRefs.current[target];
+    const nav = navRef.current;
+    if (el && nav) {
+      const navRect = nav.getBoundingClientRect();
+      const elRect = el.getBoundingClientRect();
+      setIndicator({
+        left: elRect.left - navRect.left,
+        width: elRect.width,
+      });
+    }
+  }, [hovered, active]);
 
   return (
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        .grupp-nav * { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
 
-        .nav-pill {
-          font-family: 'Inter', sans-serif;
+        .nav-cta {
+          transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1),
+                      box-shadow 0.22s ease,
+                      background-color 0.18s ease;
         }
-
-        .nav-link-active::after {
-          content: '';
-          position: absolute;
-          bottom: -2px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 16px;
-          height: 2px;
-          background: #0ea5e9;
-          border-radius: 999px;
+        .nav-cta:hover {
+          transform: translateY(-1.5px);
+          box-shadow: 0 0 0 3px rgba(14,165,233,0.2), 0 6px 20px rgba(14,165,233,0.3);
+          background-color: #38bdf8;
         }
-
-        .cta-btn {
-          transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-        }
-        .cta-btn:hover {
-          transform: translateY(-1px);
-          box-shadow: 0 0 0 3px rgba(14,165,233,0.18), 0 4px 16px rgba(14,165,233,0.28);
-        }
-        .cta-btn:hover .cta-arrow {
+        .nav-cta:hover .nav-arrow {
           transform: translateX(3px);
         }
-        .cta-arrow {
-          transition: transform 0.2s ease;
+        .nav-arrow {
+          transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .nav-link {
+          transition: color 0.18s ease;
+        }
+        .nav-indicator {
+          transition: left 0.3s cubic-bezier(0.65,0,0.35,1),
+                      width 0.3s cubic-bezier(0.65,0,0.35,1);
         }
       `}</style>
 
       <nav
-        className="nav-pill fixed top-5 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none"
+        className="grupp-nav fixed top-5 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none"
         aria-label="Main navigation"
       >
+        {/* ─── Pill ─── */}
         <div
           className={`
             pointer-events-auto
-            w-full max-w-[1100px]
+            w-full max-w-[920px]
             flex items-center justify-between
-            px-5 py-2.5
+            px-6 py-0
+            h-[58px]
             rounded-[999px]
-            border
+            border border-white/[0.18]
             transition-all duration-300
-            ${scrolled
-              ? 'bg-white/92 border-zinc-200/80 shadow-[0_4px_24px_rgba(0,0,0,0.09)]'
-              : 'bg-white/80 border-zinc-200/60 shadow-[0_2px_16px_rgba(0,0,0,0.07)]'}
-            backdrop-blur-[14px]
           `}
-          style={{ WebkitBackdropFilter: 'blur(14px)' }}
+          style={{
+            background: scrolled
+              ? 'rgba(255,255,255,0.13)'
+              : 'rgba(255,255,255,0.10)',
+            backdropFilter: 'blur(22px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(22px) saturate(180%)',
+            boxShadow: scrolled
+              ? '0 2px 24px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.18)'
+              : '0 2px 16px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.16)',
+          }}
         >
-          {/* ── Logo ── */}
-          <a
-            href="/"
-            className="flex items-center shrink-0 select-none"
-            aria-label="Grupp home"
-          >
+          {/* Logo */}
+          <a href="/" className="flex items-center shrink-0 select-none">
             <span
-              className="text-[18px] font-extrabold tracking-[-0.04em] leading-none text-zinc-950"
-              style={{ fontFamily: "'Inter', sans-serif", letterSpacing: '-0.04em' }}
+              className="text-[19px] font-extrabold tracking-[-0.045em] leading-none text-white"
             >
-              grupp<span className="text-sky-500">.</span>
+              grupp<span className="text-sky-400">.</span>
             </span>
           </a>
 
-          {/* ── Desktop Nav Links ── */}
-          <div className="hidden md:flex items-center gap-1">
-            {links.map(({ label, href }) => {
-              const isActive = activeLink === label;
+          {/* Desktop nav links with sliding underline */}
+          <div
+            className="hidden md:flex items-center gap-1 relative"
+            ref={navRef}
+            onMouseLeave={() => setHovered(null)}
+          >
+            {LINKS.map(({ label, href }) => {
+              const isActive = active === label;
               return (
                 <a
                   key={label}
                   href={href}
-                  onClick={() => setActiveLink(label)}
+                  ref={(el) => { linkRefs.current[label] = el; }}
+                  onClick={() => setActive(label)}
+                  onMouseEnter={() => setHovered(label)}
                   className={`
-                    relative px-4 py-2 rounded-full
-                    text-[14px] font-medium leading-none
-                    transition-colors duration-200
-                    ${isActive
-                      ? 'text-zinc-900'
-                      : 'text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100/70'}
-                    ${isActive ? 'nav-link-active' : ''}
+                    nav-link relative px-4 py-2 rounded-full
+                    text-[14.5px] font-medium leading-none select-none
+                    ${isActive && !hovered
+                      ? 'text-white'
+                      : hovered === label
+                        ? 'text-white'
+                        : 'text-white/50 hover:text-white/80'}
                   `}
                 >
                   {label}
-                  {isActive && (
-                    <span
-                      className="absolute left-1/2 -translate-x-1/2 -bottom-0.5 w-4 h-[2px] bg-sky-500 rounded-full"
-                    />
-                  )}
                 </a>
               );
             })}
+
+            {/* Sliding underline indicator */}
+            {indicator.width > 0 && (
+              <span
+                className="nav-indicator absolute bottom-0.5 h-[2px] rounded-full bg-sky-400"
+                style={{
+                  left: indicator.left,
+                  width: indicator.width,
+                  paddingLeft: '16px',
+                  paddingRight: '16px',
+                  left: indicator.left + 16,
+                  width: indicator.width - 32,
+                }}
+              />
+            )}
           </div>
 
-          {/* ── CTA + Mobile toggle ── */}
+          {/* CTA + hamburger */}
           <div className="flex items-center gap-3">
             <Link
               href="#"
-              className="cta-btn hidden sm:inline-flex items-center gap-1.5 bg-sky-500 hover:bg-sky-400 text-white text-[13.5px] font-semibold px-4 py-2 rounded-full shadow-[0_2px_8px_rgba(14,165,233,0.25)]"
+              className="nav-cta hidden sm:inline-flex items-center gap-[6px] bg-sky-500 text-white text-[13.5px] font-semibold px-[18px] py-[9px] rounded-full shadow-[0_2px_10px_rgba(14,165,233,0.3)]"
             >
               Get Started
-              <ArrowRight size={13} strokeWidth={2.5} className="cta-arrow" />
+              <ArrowRight size={13} strokeWidth={2.5} className="nav-arrow" />
             </Link>
 
-            {/* Hamburger — mobile only */}
             <button
-              className="md:hidden flex items-center justify-center w-8 h-8 rounded-full text-zinc-600 hover:bg-zinc-100 transition-colors duration-200"
+              className="md:hidden flex items-center justify-center w-9 h-9 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors duration-200"
               onClick={() => setMobileOpen((v) => !v)}
               aria-label="Toggle menu"
             >
-              {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+              {mobileOpen ? <X size={17} /> : <Menu size={17} />}
             </button>
           </div>
         </div>
 
-        {/* ── Mobile Dropdown ── */}
+        {/* ─── Mobile dropdown ─── */}
         {mobileOpen && (
           <div
-            className="pointer-events-auto absolute top-[calc(100%+8px)] left-4 right-4 bg-white/95 backdrop-blur-xl border border-zinc-200/70 rounded-[24px] shadow-[0_8px_32px_rgba(0,0,0,0.1)] p-4 flex flex-col gap-1"
-            style={{ fontFamily: "'Inter', sans-serif" }}
+            className="pointer-events-auto absolute top-[calc(100%+8px)] left-4 right-4 rounded-[24px] border border-white/[0.15] p-4 flex flex-col gap-1"
+            style={{
+              background: 'rgba(10,10,20,0.82)',
+              backdropFilter: 'blur(24px) saturate(160%)',
+              WebkitBackdropFilter: 'blur(24px) saturate(160%)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.35)',
+            }}
           >
-            {links.map(({ label, href }) => (
+            {LINKS.map(({ label, href }) => (
               <a
                 key={label}
                 href={href}
-                onClick={() => { setActiveLink(label); setMobileOpen(false); }}
-                className="px-4 py-3 rounded-xl text-[15px] font-medium text-zinc-700 hover:text-zinc-900 hover:bg-zinc-50 transition-colors duration-150"
+                onClick={() => { setActive(label); setMobileOpen(false); }}
+                className="px-4 py-3 rounded-xl text-[15px] font-medium text-white/70 hover:text-white hover:bg-white/8 transition-colors duration-150"
               >
                 {label}
               </a>
             ))}
-            <div className="mt-2 pt-2 border-t border-zinc-100">
+            <div className="mt-2 pt-2 border-t border-white/10">
               <Link
                 href="#"
-                className="cta-btn flex items-center justify-center gap-1.5 bg-sky-500 text-white text-[14px] font-semibold px-4 py-3 rounded-xl w-full"
+                className="nav-cta flex items-center justify-center gap-2 bg-sky-500 text-white text-[14px] font-semibold px-4 py-3 rounded-xl w-full"
               >
                 Get Started
-                <ArrowRight size={14} strokeWidth={2.5} className="cta-arrow" />
+                <ArrowRight size={14} strokeWidth={2.5} className="nav-arrow" />
               </Link>
             </div>
           </div>
