@@ -23,27 +23,30 @@ export default function Nav({ darkMode, setDarkMode }) {
         }`}
       >
         {/* Logo */}
-        <a href="/" className="flex items-center pl-2">
-          <span className={`font-black text-lg tracking-tighter ${darkMode ? 'text-white' : 'text-zinc-950'}`}>
-            grupp<span className="text-sky-500">.</span>
-          </span>
-        </a>
+        <div className="flex-1 flex justify-start">
+          <a href="/" className="flex items-center pl-2">
+            <span className={`font-black text-lg tracking-tighter ${darkMode ? 'text-white' : 'text-zinc-950'}`}>
+              grupp<span className="text-sky-500">.</span>
+            </span>
+          </a>
+        </div>
 
         {/* Center links */}
-        <div className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:flex items-center gap-1 text-[15px] font-medium tracking-tight ${darkMode ? 'text-zinc-400' : 'text-zinc-500'}`}>
+        <div className="hidden md:flex flex-1 items-center justify-center gap-8 text-[15px] font-medium tracking-tight">
           {['Home', 'Products'].map((link) => (
             <a
               key={link}
               href={link === 'Home' ? '#' : `#${link.toLowerCase().replace(/\s+/g, '-')}`}
-              className={`px-4 py-1.5 rounded-full transition-all duration-300 ${darkMode ? 'hover:text-white hover:bg-white/10' : 'hover:text-zinc-900 hover:bg-black/5'}`}
+              className={`relative group leading-none transition-colors duration-200 ${darkMode ? 'text-zinc-400 hover:text-white' : 'text-zinc-500 hover:text-zinc-900'}`}
             >
               {link}
+              <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-sky-500 transition-all duration-300 group-hover:w-full rounded-full"></span>
             </a>
           ))}
         </div>
 
         {/* Right controls */}
-        <div className="flex items-center">
+        <div className="flex-1 flex justify-end">
           <Link
             href="#"
             className="group flex items-center gap-1.5 bg-sky-500 hover:bg-sky-400 text-white font-semibold text-[13px] px-5 py-2 rounded-full transition-all duration-300 shadow-md shadow-sky-500/20 hover:shadow-lg hover:shadow-sky-400/30"
