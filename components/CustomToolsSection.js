@@ -20,15 +20,26 @@ export default function CustomToolsSection() {
       icon: <Landmark size={20} className="text-zinc-400 group-hover:text-sky-500 transition-colors" />,
       visual: (
         <div className="relative w-full h-48 md:h-64 flex items-center justify-center">
-          <div className="relative bg-white rounded-[24px] shadow-2xl shadow-sky-900/20 animate-float overflow-hidden w-48 md:w-56 aspect-square flex items-center justify-center">
-            <video 
-              src="https://cdnl.iconscout.com/lottie/premium/preview-watermark/pos-payment-animation-gif-download-9769620.mp4"
-              autoPlay 
-              loop 
-              muted 
-              playsInline
-              className="w-[110%] h-[110%] object-cover max-w-none"
-            />
+          <div className="relative bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 w-40 md:w-48 shadow-xl animate-float">
+            {/* POS terminal body */}
+            <div className="bg-sky-600 rounded-xl p-4 border border-sky-400/30">
+              {/* Receipt slot */}
+              <div className="h-6 bg-white rounded-t-lg flex items-end justify-center mb-3">
+                <span className="w-10 h-1 bg-zinc-300 rounded mb-1" />
+              </div>
+              {/* Screen */}
+              <div className="h-10 bg-zinc-950 rounded-lg mb-3 flex items-center justify-center">
+                <span className="text-[10px] font-mono font-bold text-sky-400">grupp.</span>
+              </div>
+              {/* Keyboard/Button grids */}
+              <div className="grid grid-cols-3 gap-1.5">
+                {[...Array(9)].map((_, i) => (
+                  <div key={i} className="h-2.5 bg-sky-500/50 rounded-sm" />
+                ))}
+              </div>
+            </div>
+            {/* Pedestal */}
+            <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-32 md:w-40 h-3 bg-zinc-950/20 rounded-full blur-md" />
           </div>
         </div>
       ),
