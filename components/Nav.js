@@ -32,10 +32,9 @@ export default function Nav({ darkMode }) {
     if (el && nav) {
       const navRect = nav.getBoundingClientRect();
       const elRect = el.getBoundingClientRect();
-      const padding = 12;
       setIndicator({
-        left: elRect.left - navRect.left + padding,
-        width: elRect.width - padding * 2,
+        left: elRect.left - navRect.left + 10,
+        width: elRect.width - 20,
       });
     }
   }, []);
@@ -45,134 +44,203 @@ export default function Nav({ darkMode }) {
     setIndicator(null);
   }, []);
 
-  const pillStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-    maxWidth: '920px',
-    height: '56px',
-    padding: '0 20px',
-    borderRadius: '999px',
-    border: '1px solid rgba(255,255,255,0.15)',
-    background: scrolled ? 'rgba(255,255,255,0.13)' : 'rgba(255,255,255,0.09)',
-    backdropFilter: 'blur(20px) saturate(180%)',
-    WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-    boxShadow: scrolled
-      ? '0 2px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.15)'
-      : '0 2px 16px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.12)',
-    transition: 'background 0.3s ease, box-shadow 0.3s ease',
-    fontFamily: "'Inter', sans-serif",
-    WebkitFontSmoothing: 'antialiased',
-  };
-
   return (
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-        .nav-cta {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          background: #0ea5e9;
-          color: white;
-          font-size: 13px;
-          font-weight: 600;
-          padding: 8px 16px;
-          border-radius: 999px;
-          box-shadow: 0 2px 10px rgba(14,165,233,0.3);
-          transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1),
-                      box-shadow 0.2s ease,
-                      background-color 0.15s ease;
-          text-decoration: none;
-          white-space: nowrap;
+        .gn-wrap {
+          position: fixed;
+          top: 20px;
+          left: 0; right: 0;
+          z-index: 50;
+          display: flex;
+          justify-content: center;
+          padding: 0 16px;
+          pointer-events: none;
+          font-family: 'Inter', sans-serif;
+          -webkit-font-smoothing: antialiased;
         }
-        .nav-cta:hover {
-          transform: translateY(-1.5px);
-          background: #38bdf8;
-          box-shadow: 0 0 0 3px rgba(14,165,233,0.2), 0 6px 18px rgba(14,165,233,0.3);
-        }
-        .nav-cta:hover .nav-arrow { transform: translateX(3px); }
-        .nav-arrow { transition: transform 0.2s ease; display: inline-flex; align-items: center; }
 
-        .nav-link-item {
+        .gn-pill {
+          pointer-events: auto;
           position: relative;
-          padding: 4px 14px;
+          width: 100%;
+          max-width: 900px;
+          height: 54px;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          padding: 0 22px;
+          border-radius: 999px;
+          border: 1px solid rgba(255,255,255,0.14);
+          transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .gn-logo {
+          display: flex;
+          align-items: center;
+          text-decoration: none;
+          user-select: none;
+          flex-shrink: 0;
+          line-height: 1;
+        }
+        .gn-logo-text {
+          font-size: 18px;
+          font-weight: 800;
+          letter-spacing: -0.045em;
+          line-height: 1;
+          color: #fff;
+        }
+        .gn-logo-dot { color: #38bdf8; }
+
+        .gn-links {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          display: flex;
+          align-items: center;
+          gap: 2px;
+        }
+
+        .gn-link {
+          position: relative;
+          padding: 6px 14px;
           font-size: 14px;
           font-weight: 500;
           line-height: 1;
           text-decoration: none;
+          border-radius: 6px;
           transition: color 0.18s ease;
           white-space: nowrap;
           cursor: pointer;
         }
 
-        .nav-indicator {
+        .gn-link-active { color: #ffffff; }
+        .gn-link-muted  { color: rgba(255,255,255,0.45); }
+        .gn-link-muted:hover { color: rgba(255,255,255,0.8); }
+
+        .gn-indicator {
           position: absolute;
-          bottom: -4px;
+          bottom: -2px;
           height: 2px;
           border-radius: 999px;
           background: #38bdf8;
           transition: left 0.28s cubic-bezier(0.65,0,0.35,1),
                       width 0.28s cubic-bezier(0.65,0,0.35,1);
         }
+
+        .gn-right {
+          margin-left: auto;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          flex-shrink: 0;
+        }
+
+        .gn-cta {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          background: #0ea5e9;
+          color: #fff;
+          font-size: 13px;
+          font-weight: 600;
+          padding: 8px 16px;
+          border-radius: 999px;
+          text-decoration: none;
+          box-shadow: 0 2px 10px rgba(14,165,233,0.28);
+          transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1),
+                      box-shadow 0.2s ease,
+                      background 0.15s ease;
+          white-space: nowrap;
+        }
+        .gn-cta:hover {
+          background: #38bdf8;
+          transform: translateY(-1.5px);
+          box-shadow: 0 0 0 3px rgba(14,165,233,0.2), 0 6px 18px rgba(14,165,233,0.3);
+        }
+        .gn-cta:hover .gn-arrow { transform: translateX(3px); }
+        .gn-arrow {
+          display: inline-flex;
+          align-items: center;
+          transition: transform 0.2s ease;
+        }
+
+        .gn-hamburger {
+          display: none;
+          align-items: center;
+          justify-content: center;
+          width: 34px; height: 34px;
+          border-radius: 50%;
+          border: none;
+          background: transparent;
+          color: rgba(255,255,255,0.6);
+          cursor: pointer;
+          transition: background 0.2s, color 0.2s;
+        }
+        .gn-hamburger:hover { background: rgba(255,255,255,0.1); color: #fff; }
+        @media (max-width: 767px) { .gn-hamburger { display: flex; } .gn-cta { display: none; } }
+
+        .gn-mobile {
+          pointer-events: auto;
+          position: absolute;
+          top: calc(100% + 8px);
+          left: 16px; right: 16px;
+          background: rgba(8,8,18,0.9);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 20px;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+          padding: 12px;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .gn-mobile-link {
+          padding: 12px 16px;
+          border-radius: 10px;
+          font-size: 15px;
+          font-weight: 500;
+          color: rgba(255,255,255,0.65);
+          text-decoration: none;
+          transition: background 0.15s, color 0.15s;
+        }
+        .gn-mobile-link:hover { background: rgba(255,255,255,0.07); color: #fff; }
+        .gn-mobile-divider { border-top: 1px solid rgba(255,255,255,0.08); margin: 8px 0; }
+        .gn-mobile-cta {
+          display: flex; align-items: center; justify-content: center;
+          gap: 6px; background: #0ea5e9; color: #fff;
+          font-size: 14px; font-weight: 600;
+          padding: 12px; border-radius: 10px; text-decoration: none;
+        }
       `}</style>
 
-      <nav
-        style={{
-          position: 'fixed',
-          top: '20px',
-          left: 0,
-          right: 0,
-          zIndex: 50,
-          display: 'flex',
-          justifyContent: 'center',
-          padding: '0 16px',
-          pointerEvents: 'none',
-        }}
-        aria-label="Main navigation"
-      >
+      <nav className="gn-wrap" aria-label="Main navigation">
         {/* Pill */}
-        <div style={{ ...pillStyle, pointerEvents: 'auto' }}>
-
-          {/* ── Logo ── */}
-          <a
-            href="/"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              flexShrink: 0,
-              textDecoration: 'none',
-              userSelect: 'none',
-            }}
-          >
-            <span style={{
-              fontSize: '18px',
-              fontWeight: 800,
-              letterSpacing: '-0.045em',
-              lineHeight: 1,
-              color: 'white',
-            }}>
-              grupp<span style={{ color: '#38bdf8' }}>.</span>
-            </span>
+        <div
+          className="gn-pill"
+          style={{
+            background: scrolled ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.08)',
+            backdropFilter: 'blur(20px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+            boxShadow: scrolled
+              ? '0 2px 24px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.14)'
+              : '0 2px 14px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.1)',
+          }}
+        >
+          {/* Logo */}
+          <a href="/" className="gn-logo">
+            <span className="gn-logo-text">grupp<span className="gn-logo-dot">.</span></span>
           </a>
 
-          {/* ── Center links (flex-1, centered) ── */}
-          <div
-            ref={navRef}
-            onMouseLeave={handleMouseLeave}
-            style={{
-              flex: 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '4px',
-              position: 'relative',
-            }}
-          >
+          {/* Center links — absolutely centered in the pill */}
+          <div className="gn-links" ref={navRef} onMouseLeave={handleMouseLeave}>
             {LINKS.map(({ label, href }) => {
               const isActive = active === label;
-              const isHovered = hovered === label;
+              const isHov = hovered === label;
               return (
                 <a
                   key={label}
@@ -180,111 +248,54 @@ export default function Nav({ darkMode }) {
                   ref={(el) => { linkRefs.current[label] = el; }}
                   onClick={() => setActive(label)}
                   onMouseEnter={() => handleMouseEnter(label)}
-                  className="nav-link-item"
-                  style={{
-                    color: isHovered || (isActive && !hovered)
-                      ? 'rgba(255,255,255,1)'
-                      : 'rgba(255,255,255,0.45)',
-                  }}
+                  className={`gn-link ${isHov || (isActive && !hovered) ? 'gn-link-active' : 'gn-link-muted'}`}
                 >
                   {label}
                 </a>
               );
             })}
 
-            {/* Sliding underline */}
             {hovered && indicator && (
               <span
-                className="nav-indicator"
+                className="gn-indicator"
                 style={{ left: indicator.left, width: indicator.width }}
               />
             )}
           </div>
 
-          {/* ── CTA + hamburger ── */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
-            <Link href="#" className="nav-cta" style={{ display: window ? undefined : 'none' }}>
+          {/* Right: CTA + hamburger */}
+          <div className="gn-right">
+            <Link href="#" className="gn-cta">
               Get Started
-              <span className="nav-arrow">
-                <ArrowRight size={12} strokeWidth={2.5} />
-              </span>
+              <span className="gn-arrow"><ArrowRight size={12} strokeWidth={2.5} /></span>
             </Link>
-
             <button
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '34px',
-                height: '34px',
-                borderRadius: '999px',
-                background: 'transparent',
-                border: 'none',
-                color: 'rgba(255,255,255,0.6)',
-                cursor: 'pointer',
-                transition: 'background 0.2s ease, color 0.2s ease',
-              }}
+              className="gn-hamburger"
               onClick={() => setMobileOpen((v) => !v)}
               aria-label="Toggle menu"
-              className="md:hidden"
             >
               {mobileOpen ? <X size={16} /> : <Menu size={16} />}
             </button>
           </div>
         </div>
 
-        {/* ── Mobile dropdown ── */}
+        {/* Mobile dropdown */}
         {mobileOpen && (
-          <div
-            style={{
-              position: 'absolute',
-              top: 'calc(100% + 8px)',
-              left: '16px',
-              right: '16px',
-              background: 'rgba(10,10,20,0.88)',
-              backdropFilter: 'blur(24px)',
-              WebkitBackdropFilter: 'blur(24px)',
-              border: '1px solid rgba(255,255,255,0.12)',
-              borderRadius: '20px',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
-              padding: '12px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '4px',
-              pointerEvents: 'auto',
-              fontFamily: "'Inter', sans-serif",
-            }}
-          >
+          <div className="gn-mobile">
             {LINKS.map(({ label, href }) => (
               <a
                 key={label}
                 href={href}
+                className="gn-mobile-link"
                 onClick={() => { setActive(label); setMobileOpen(false); }}
-                style={{
-                  padding: '12px 16px',
-                  borderRadius: '12px',
-                  fontSize: '15px',
-                  fontWeight: 500,
-                  color: 'rgba(255,255,255,0.7)',
-                  textDecoration: 'none',
-                  transition: 'background 0.15s ease, color 0.15s ease',
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.color = 'white'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.7)'; }}
               >
                 {label}
               </a>
             ))}
-            <div style={{ marginTop: '8px', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-              <Link
-                href="#"
-                className="nav-cta"
-                style={{ width: '100%', justifyContent: 'center', borderRadius: '12px', padding: '12px 16px', fontSize: '14px' }}
-              >
-                Get Started
-                <span className="nav-arrow"><ArrowRight size={14} strokeWidth={2.5} /></span>
-              </Link>
-            </div>
+            <div className="gn-mobile-divider" />
+            <Link href="#" className="gn-mobile-cta">
+              Get Started <ArrowRight size={14} strokeWidth={2.5} />
+            </Link>
           </div>
         )}
       </nav>
