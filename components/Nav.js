@@ -26,10 +26,10 @@ export default function Nav({ darkMode }) {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Recalculate indicator position whenever hovered or active changes
+  // Recalculate indicator position only when something is hovered
   useEffect(() => {
-    const target = hovered || active;
-    const el = linkRefs.current[target];
+    if (!hovered) return;
+    const el = linkRefs.current[hovered];
     const nav = navRef.current;
     if (el && nav) {
       const navRect = nav.getBoundingClientRect();
@@ -39,7 +39,7 @@ export default function Nav({ darkMode }) {
         width: elRect.width,
       });
     }
-  }, [hovered, active]);
+  }, [hovered]);
 
   return (
     <>
@@ -138,15 +138,11 @@ export default function Nav({ darkMode }) {
               );
             })}
 
-            {/* Sliding underline indicator */}
-            {indicator.width > 0 && (
+            {/* Sliding underline — only visible on hover */}
+            {hovered && indicator.width > 0 && (
               <span
                 className="nav-indicator absolute bottom-0.5 h-[2px] rounded-full bg-sky-400"
                 style={{
-                  left: indicator.left,
-                  width: indicator.width,
-                  paddingLeft: '16px',
-                  paddingRight: '16px',
                   left: indicator.left + 16,
                   width: indicator.width - 32,
                 }}
