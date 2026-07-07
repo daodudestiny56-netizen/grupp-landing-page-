@@ -114,7 +114,7 @@ export default function Nav({ darkMode }) {
 
           {/* Desktop nav links with sliding underline */}
           <div
-            className="hidden md:flex items-center gap-1 relative"
+            className="hidden md:flex items-center self-center gap-1 relative"
             ref={navRef}
             onMouseLeave={handleMouseLeave}
           >
@@ -128,7 +128,7 @@ export default function Nav({ darkMode }) {
                   onClick={() => setActive(label)}
                   onMouseEnter={() => handleMouseEnter(label)}
                   className={`
-                    nav-link relative px-4 py-2 rounded-full
+                    nav-link relative px-4 rounded-full
                     text-[14.5px] font-medium leading-none select-none
                     ${isActive && !hovered
                       ? 'text-white'
