@@ -84,11 +84,12 @@ export default function CommunitySection() {
   
   useEffect(() => {
     let timeout;
+    const isMobile = window.innerWidth < 768;
   
     if (phase === 'entering') {
       timeout = setTimeout(() => setPhase('visible'), 600);
     } else if (phase === 'visible') {
-      const hold = 5000 + Math.random() * 3000; // 5000–8000ms
+      const hold = isMobile ? (4000 + Math.random() * 2000) : (5000 + Math.random() * 3000);
       timeout = setTimeout(() => setPhase('exiting'), hold);
     } else if (phase === 'exiting') {
       timeout = setTimeout(() => {
@@ -104,328 +105,121 @@ export default function CommunitySection() {
 
   return (
     <section
-      style={{
-        position: 'relative',
-        width: '100%',
-        minHeight: '100vh',
-        backgroundImage: 'url(/market.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center center',
-        backgroundAttachment: 'scroll',
-        display: 'flex',
-        alignItems: 'center',
-        overflow: 'hidden',
-      }}
+      className="relative w-full min-h-[auto] md:min-h-screen bg-cover bg-center overflow-hidden flex items-center bg-scroll"
+      style={{ backgroundImage: 'url(/market.jpg)' }}
     >
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes livePulse {
-          0% {
-            box-shadow: 0 0 0 0 rgba(0, 212, 164, 0.5);
-          }
-          70% {
-            box-shadow: 0 0 0 10px rgba(0, 212, 164, 0);
-          }
-          100% {
-            box-shadow: 0 0 0 0 rgba(0, 212, 164, 0);
-          }
-        }
-        @media (max-width: 1024px) {
-          .community-grid {
-            grid-template-columns: 1fr !important;
-            padding: 80px 24px !important;
-            gap: 40px !important;
-          }
+          0% { box-shadow: 0 0 0 0 rgba(0, 212, 164, 0.5); }
+          70% { box-shadow: 0 0 0 10px rgba(0, 212, 164, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(0, 212, 164, 0); }
         }
       `}} />
 
       {/* Overlay Layer 1 — directional gradient */}
       <div
+        className="absolute inset-0 pointer-events-none z-[1]"
         style={{
-          position: 'absolute',
-          inset: 0,
           background: 'linear-gradient(to right, rgba(5,13,26,0.88) 0%, rgba(5,13,26,0.72) 40%, rgba(5,13,26,0.45) 70%, rgba(5,13,26,0.25) 100%)',
-          zIndex: 1,
-          pointerEvents: 'none',
         }}
       />
 
       {/* Overlay Layer 2 — bottom seal */}
       <div
+        className="absolute inset-0 pointer-events-none z-[2]"
         style={{
-          position: 'absolute',
-          inset: 0,
           background: 'linear-gradient(to bottom, rgba(5,13,26,0.2) 0%, transparent 20%, transparent 80%, rgba(5,13,26,0.9) 100%)',
-          zIndex: 2,
-          pointerEvents: 'none',
         }}
       />
 
-      <div
-        className="community-grid"
-        style={{
-          position: 'relative',
-          zIndex: 3,
-          width: '100%',
-          maxWidth: '1280px',
-          margin: '0 auto',
-          padding: '120px 60px',
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '80px',
-          alignItems: 'center',
-        }}
-      >
-        {/* LEFT COLUMN */}
-        <div>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            marginBottom: '16px',
-          }}>
-            <div style={{
-              width: '8px',
-              height: '8px',
-              borderRadius: '50%',
-              background: '#00D4A4',
-              boxShadow: '0 0 0 0 rgba(0, 212, 164, 0.4)',
-              animation: 'livePulse 2s ease-out infinite',
-            }} />
-            <span style={{
-              fontSize: '11px',
-              fontWeight: '600',
-              color: 'rgba(255,255,255,0.5)',
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-              fontFamily: "'Space Grotesk', sans-serif",
-            }}>
+      <div className="relative z-[3] w-full max-w-[1280px] mx-auto px-[var(--page-px)] py-20 md:py-32 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 items-center">
+        
+        {/* LEFT COLUMN (Transactions) - Under text on mobile */}
+        <div className="order-last md:order-first w-full">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-2 h-2 rounded-full bg-[#00D4A4]" style={{ animation: 'livePulse 2s ease-out infinite' }} />
+            <span className="text-[11px] font-semibold text-white/50 tracking-widest uppercase font-mono">
               Live transactions
             </span>
           </div>
 
           <div
+            className="w-full md:max-w-[380px] flex items-center gap-4 p-4 md:p-5 rounded-2xl border border-sky-400/20 bg-[#0a1628]/85 backdrop-blur-xl shadow-2xl shadow-black/40"
             style={{
               ...cardStyle[phase],
-              background: 'rgba(10, 22, 40, 0.85)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              border: '1px solid rgba(61, 170, 255, 0.2)',
-              borderRadius: '20px',
-              padding: '18px 20px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '16px',
-              width: '100%',
-              maxWidth: '380px',
               boxShadow: '0 24px 48px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255,255,255,0.04) inset',
               willChange: 'transform, opacity',
             }}
           >
             <div
-              style={{
-                width: '44px',
-                height: '44px',
-                borderRadius: '50%',
-                background: `linear-gradient(135deg, ${transaction.avatarColor}, ${transaction.avatarColor}88)`,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontFamily: "'Space Mono', monospace",
-                fontSize: '13px',
-                fontWeight: '700',
-                color: '#ffffff',
-                flexShrink: 0,
-              }}
+              className="w-11 h-11 rounded-full flex items-center justify-center font-mono text-[13px] font-bold text-white shrink-0"
+              style={{ background: `linear-gradient(135deg, ${transaction.avatarColor}, ${transaction.avatarColor}88)` }}
             >
               {transaction.avatar}
             </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'flex-start',
-                marginBottom: '4px',
-              }}>
-                <span style={{
-                  fontFamily: "'Space Grotesk', sans-serif",
-                  fontSize: '14px',
-                  fontWeight: '700',
-                  color: '#ffffff',
-                  letterSpacing: '-0.01em',
-                }}>
+            <div className="flex-1 min-w-0">
+              <div className="flex justify-between items-start mb-1">
+                <span className="text-sm font-bold text-white tracking-tight">
                   {transaction.name}
                 </span>
-                <span style={{
-                  fontFamily: "'JetBrains Mono', 'Space Mono', monospace",
-                  fontSize: '14px',
-                  fontWeight: '700',
-                  color: transaction.amountColor,
-                  letterSpacing: '-0.01em',
-                  flexShrink: 0,
-                  marginLeft: '12px',
-                }}>
+                <span
+                  className="font-mono text-sm font-bold tracking-tight shrink-0 ml-3"
+                  style={{ color: transaction.amountColor }}
+                >
                   {transaction.amount}
                 </span>
               </div>
-              <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}>
-                <span style={{
-                  fontSize: '13px',
-                  color: 'rgba(200, 220, 240, 0.7)',
-                  fontFamily: "'Space Grotesk', sans-serif",
-                }}>
+              <div className="flex justify-between items-center">
+                <span className="text-[13px] text-sky-100/70">
                   {transaction.action}
                 </span>
-                <span style={{
-                  fontSize: '11px',
-                  color: 'rgba(255,255,255,0.35)',
-                  fontFamily: "'Space Grotesk', sans-serif",
-                  flexShrink: 0,
-                  marginLeft: '8px',
-                }}>
+                <span className="text-[11px] text-white/35 shrink-0 ml-2">
                   {transaction.time}
                 </span>
               </div>
-              <div style={{ marginTop: '8px' }}>
-                <span style={{
-                  display: 'inline-block',
-                  fontSize: '10px',
-                  fontWeight: '600',
-                  color: 'rgba(61, 170, 255, 0.9)',
-                  background: 'rgba(0, 133, 255, 0.12)',
-                  border: '1px solid rgba(0, 133, 255, 0.2)',
-                  borderRadius: '100px',
-                  padding: '2px 10px',
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  fontFamily: "'Space Grotesk', sans-serif",
-                }}>
+              <div className="mt-2">
+                <span className="inline-block text-[10px] font-semibold text-sky-400/90 bg-[#0085FF]/10 border border-[#0085FF]/20 rounded-full px-2.5 py-0.5 tracking-wider uppercase">
                   {transaction.category}
                 </span>
               </div>
             </div>
           </div>
 
-          <div style={{
-            marginTop: '20px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-          }}>
-            <span style={{
-              fontFamily: "'Space Mono', monospace",
-              fontSize: '22px',
-              fontWeight: '700',
-              color: '#ffffff',
-              letterSpacing: '-0.02em',
-            }}>
+          <div className="mt-6 flex items-center gap-2.5">
+            <span className="font-mono text-[clamp(36px,5vw,64px)] font-bold text-white tracking-tight leading-none">
               ₦2.4B+
             </span>
-            <span style={{
-              fontSize: '13px',
-              color: 'rgba(255,255,255,0.4)',
-              fontFamily: "'Space Grotesk', sans-serif",
-              lineHeight: '1.4',
-              maxWidth: '120px',
-            }}>
+            <span className="text-[13px] text-white/40 leading-[1.4] max-w-[120px]">
               processed this month
             </span>
           </div>
         </div>
 
-        {/* RIGHT COLUMN */}
-        <div>
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            marginBottom: '24px',
-          }}>
-            <div style={{
-              width: '6px',
-              height: '6px',
-              borderRadius: '50%',
-              background: '#0085FF',
-              animation: 'livePulse 2s ease-out infinite',
-            }} />
-            <span style={{
-              fontSize: '11px',
-              fontWeight: '600',
-              color: 'rgba(61, 170, 255, 0.9)',
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              fontFamily: "'Space Grotesk', sans-serif",
-            }}>
+        {/* RIGHT COLUMN (Text) - Above transactions on mobile */}
+        <div className="order-first md:order-last w-full">
+          <div className="inline-flex items-center gap-2 mb-6">
+            <div className="w-1.5 h-1.5 rounded-full bg-sky-500" style={{ animation: 'livePulse 2s ease-out infinite' }} />
+            <span className="text-[11px] font-semibold text-sky-500/90 tracking-widest uppercase">
               Community Impact
             </span>
           </div>
 
-          <h2 style={{
-            fontSize: 'clamp(36px, 5vw, 64px)',
-            fontWeight: '800',
-            lineHeight: '1.05',
-            letterSpacing: '-0.03em',
-            color: '#ffffff',
-            marginBottom: '24px',
-            maxWidth: '580px',
-          }}>
+          <h2 className="text-[clamp(32px,5vw,64px)] font-extrabold leading-[1.05] tracking-[-0.03em] text-white mb-6 max-w-[580px]">
             Let's build a future where{' '}
-            <span style={{ color: '#0085FF', whiteSpace: 'nowrap' }}>offline communities</span>
+            <span className="text-sky-500 whitespace-nowrap">offline communities</span>
             {' '}fit in.
           </h2>
 
-          <p style={{
-            fontSize: '17px',
-            color: 'rgba(200, 220, 240, 0.72)',
-            lineHeight: '1.75',
-            maxWidth: '480px',
-            marginBottom: '40px',
-          }}>
+          <p className="text-[clamp(15px,1.5vw,17px)] text-sky-100/70 leading-[1.75] max-w-[480px] mb-10">
             Grupp is the infrastructure layer that makes it possible — for the market trader in Onitsha, the cooperative in Kano, the POS agent in Ojo. Real financial tools, built for the communities that need them most.
           </p>
 
           <a
             href="#how"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '12px',
-              background: '#0085FF',
-              color: '#ffffff',
-              fontFamily: "'Space Grotesk', sans-serif",
-              fontSize: '15px',
-              fontWeight: '700',
-              padding: '14px 28px',
-              borderRadius: '100px',
-              textDecoration: 'none',
-              letterSpacing: '-0.01em',
-              boxShadow: '0 8px 32px rgba(0, 133, 255, 0.35)',
-              transition: 'background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease',
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.background = '#3DAAFF';
-              e.currentTarget.style.boxShadow = '0 12px 40px rgba(0, 133, 255, 0.5)';
-              e.currentTarget.style.transform = 'translateY(-2px)';
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.background = '#0085FF';
-              e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 133, 255, 0.35)';
-              e.currentTarget.style.transform = 'translateY(0px)';
-            }}
+            className="inline-flex items-center gap-3 bg-sky-500 hover:bg-sky-400 text-white font-bold text-[15px] px-7 py-3.5 rounded-full transition-all duration-200 shadow-lg shadow-sky-500/30 hover:-translate-y-px hover:shadow-sky-400/40"
           >
             See how it works
-            <span style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '28px',
-              height: '28px',
-              borderRadius: '50%',
-              background: 'rgba(255,255,255,0.2)',
-            }}>
+            <span className="flex items-center justify-center w-7 h-7 rounded-full bg-white/20">
               →
             </span>
           </a>

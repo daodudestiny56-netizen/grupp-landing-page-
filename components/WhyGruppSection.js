@@ -28,7 +28,7 @@ export default function WhyGruppSection() {
   ];
 
   return (
-    <section className="relative py-28 px-6 bg-transparent text-white overflow-hidden border-y border-zinc-900">
+    <section className="relative py-16 md:py-28 px-[var(--page-px)] bg-transparent text-white overflow-hidden border-y border-zinc-900 z-10">
       {/* Sleek Grid Mesh */}
       <div
         className="absolute inset-0 opacity-[0.04] pointer-events-none"
@@ -47,11 +47,11 @@ export default function WhyGruppSection() {
         
         {/* Header */}
         <FadeSlideUp>
-          <div className="text-center max-w-2xl mx-auto mb-20 space-y-4">
-            <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-b from-white to-zinc-400 bg-clip-text text-transparent">
+          <div className="text-center max-w-2xl mx-auto mb-16 md:mb-20 space-y-4">
+            <h2 className="text-[clamp(32px,5vw,48px)] font-extrabold tracking-[-0.02em] bg-gradient-to-b from-white to-zinc-400 bg-clip-text text-transparent">
               Why Grupp?
             </h2>
-            <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-xl mx-auto">
+            <p className="text-[13px] sm:text-sm text-zinc-400 leading-relaxed max-w-[320px] sm:max-w-xl mx-auto">
               Only a few numbers of Africa's bankable population has access to digital financial services.
               Grupp is here to equalize access for all.
             </p>
@@ -59,20 +59,20 @@ export default function WhyGruppSection() {
         </FadeSlideUp>
 
         {/* Content Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-4xl mx-auto">
           {points.map((point, i) => (
             <SlideInRight key={point.title} delay={i * 0.1}>
               <div
-                className="flex gap-5 items-start p-5 rounded-2xl bg-white/[0.01] border border-white/5 hover:border-sky-500/20 hover:bg-white/[0.03] transition-all duration-350 hover:-translate-y-1 group h-full"
+                className="flex gap-4 md:gap-5 items-start p-5 rounded-2xl bg-white/[0.01] border border-white/5 hover:border-sky-500/20 hover:bg-white/[0.03] transition-all duration-350 hover:-translate-y-1 group h-full"
               >
                 <div className="p-3.5 rounded-xl bg-sky-500/10 border border-sky-500/20 flex-shrink-0 text-sky-400 shadow-[0_0_15px_rgba(14,165,233,0.1)] group-hover:bg-sky-500 group-hover:text-white transition-all duration-300">
                   {point.icon}
                 </div>
                 <div className="space-y-1">
-                  <h3 className="text-base font-bold text-white tracking-tight group-hover:text-sky-300 transition-colors duration-300">
+                  <h3 className="text-[15px] font-bold text-white tracking-tight group-hover:text-sky-300 transition-colors duration-300">
                     {point.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                  <p className="text-[13px] sm:text-sm text-zinc-400 leading-relaxed">
                     {point.description}
                   </p>
                 </div>
