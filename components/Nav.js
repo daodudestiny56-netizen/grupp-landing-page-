@@ -85,7 +85,7 @@ export default function Nav({ darkMode }) {
           className={`
             pointer-events-auto
             w-full max-w-[920px]
-            flex items-center justify-between
+            grid grid-cols-3 items-center
             px-6 py-0
             h-[58px]
             rounded-[999px]
@@ -103,18 +103,17 @@ export default function Nav({ darkMode }) {
               : '0 2px 16px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.16)',
           }}
         >
-          {/* Logo */}
-          <a href="/" className="flex items-center shrink-0 select-none">
-            <span
-              className="text-[19px] font-extrabold tracking-[-0.045em] leading-none text-white"
-            >
+          {/* Grid: 3 equal columns — logo | links | CTA */}
+          {/* Col 1: Logo */}
+          <a href="/" className="flex items-center select-none justify-self-start">
+            <span className="text-[19px] font-extrabold tracking-[-0.045em] leading-none text-white">
               grupp<span className="text-sky-400">.</span>
             </span>
           </a>
 
-          {/* Desktop nav links with sliding underline */}
+          {/* Col 2: Desktop nav links (centered) */}
           <div
-            className="hidden md:flex items-center self-center gap-1 relative"
+            className="hidden md:flex items-center justify-center gap-1 relative"
             ref={navRef}
             onMouseLeave={handleMouseLeave}
           >
@@ -128,13 +127,12 @@ export default function Nav({ darkMode }) {
                   onClick={() => setActive(label)}
                   onMouseEnter={() => handleMouseEnter(label)}
                   className={`
-                    nav-link relative px-4 rounded-full
+                    nav-link relative px-4 py-2
                     text-[14.5px] font-medium leading-none select-none
-                    ${isActive && !hovered
+                    transition-colors duration-200
+                    ${hovered === label || (isActive && !hovered)
                       ? 'text-white'
-                      : hovered === label
-                        ? 'text-white'
-                        : 'text-white/50 hover:text-white/80'}
+                      : 'text-white/50'}
                   `}
                 >
                   {label}
@@ -145,17 +143,14 @@ export default function Nav({ darkMode }) {
             {/* Sliding underline — only visible on hover */}
             {hovered && indicator && (
               <span
-                className="nav-indicator absolute bottom-0.5 h-[2px] rounded-full bg-sky-400"
-                style={{
-                  left: indicator.left,
-                  width: indicator.width,
-                }}
+                className="nav-indicator absolute bottom-0 h-[2px] rounded-full bg-sky-400"
+                style={{ left: indicator.left, width: indicator.width }}
               />
             )}
           </div>
 
-          {/* CTA + hamburger */}
-          <div className="flex items-center gap-3">
+          {/* Col 3: CTA + hamburger */}
+          <div className="flex items-center gap-3 justify-self-end">
             <Link
               href="#"
               className="nav-cta hidden sm:inline-flex items-center gap-[6px] bg-sky-500 text-white text-[13.5px] font-semibold px-[18px] py-[9px] rounded-full shadow-[0_2px_10px_rgba(14,165,233,0.3)]"
