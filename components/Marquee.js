@@ -1,71 +1,180 @@
 'use client';
 
-const PARTNERS = [
-  'FirstBank MFB', 'LAPO Microfinance', 'Accion MFB', 'Grooming MFB', 'Renmoney',
-  'AB Microfinance', 'FINCA Nigeria', 'VFD Microfinance', 'Kuda Bank', 'FCMB',
-  'Aso Savings', 'Fortis MFB', 'Parallex Bank', 'Advans MFB', 'NPF MFB',
+const row1 = [
+  'Grooming MFB',
+  'Renmoney',
+  'AB Microfinance',
+  'FINCA Nigeria',
+  'VFD Microfinance',
+  'Kuda Bank',
+  'FCMB',
+  'Aso Savings',
+  'Fortis MFB',
+  'Parallex Bank',
 ];
 
-function Track({ reverse, darkMode }) {
-  const items = [...PARTNERS, ...PARTNERS, ...PARTNERS];
+const row2 = [
+  'Advans MFB',
+  'NPF MFB',
+  'FirstBank MFB',
+  'LAPO Microfinance',
+  'Accion MFB',
+  'Parallex Bank',
+  'Renmoney',
+  'AB Microfinance',
+  'FINCA Nigeria',
+  'VFD Microfinance',
+];
+
+function MarqueeItem({ name }) {
   return (
-    <div className="overflow-hidden relative marquee-mask">
-      <div
-        className={`flex gap-4 w-max ${reverse ? 'marquee-reverse-animation' : 'marquee-animation'}`}
-        style={{ willChange: 'transform' }}
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        flexShrink: 0,
+      }}
+    >
+      {/* The institution name */}
+      <span
+        style={{
+          fontFamily: "'Space Grotesk', sans-serif",
+          fontSize: 'clamp(15px, 3.5vw, 20px)',
+          fontWeight: '400',
+          color: 'rgba(255, 255, 255, 0.32)',
+          letterSpacing: '0.01em',
+          whiteSpace: 'nowrap',
+          transition: 'color 0.2s ease',
+          cursor: 'default',
+        }}
+        onMouseEnter={e => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.72)'}
+        onMouseLeave={e => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.32)'}
       >
-        {items.map((name, i) => (
-          <div
-            key={i}
-            className={`flex-shrink-0 px-[14px] py-[6px] text-[12px] md:px-5 md:py-2.5 md:text-sm rounded-xl border font-semibold tracking-tight whitespace-nowrap transition-colors duration-300 ${
-              darkMode
-                ? 'border-zinc-800 text-zinc-500 bg-zinc-900/40'
-                : 'border-zinc-100 text-zinc-400 bg-white'
-            }`}
-          >
-            {name}
-          </div>
-        ))}
-      </div>
+        {name}
+      </span>
+
+      {/* Separator dot between items */}
+      <span
+        style={{
+          display: 'inline-block',
+          width: '2px',
+          height: '2px',
+          borderRadius: '50%',
+          background: 'rgba(255,255,255,0.12)',
+          margin: '0 clamp(16px, 4vw, 24px)',
+          flexShrink: 0,
+        }}
+      />
     </div>
   );
 }
 
-export default function Marquee({ darkMode }) {
+export default function Marquee() {
   return (
-    <section className={`py-16 border-y space-y-4 ${darkMode ? 'border-zinc-900' : 'border-zinc-100'}`}>
+    <section
+      style={{
+        width: '100%',
+        background: 'radial-gradient(ellipse at center, rgba(0, 133, 255, 0.15) 0%, #050D1A 70%)',
+        backgroundColor: '#050D1A',
+        borderTop: '1px solid rgba(255,255,255,0.06)',
+        borderBottom: '1px solid rgba(255,255,255,0.06)',
+        padding: 'clamp(32px, 6vw, 40px) 0',
+        overflow: 'hidden',
+      }}
+    >
       <style dangerouslySetInnerHTML={{__html: `
-        .marquee-animation { animation: marquee 20s linear infinite; }
-        .marquee-reverse-animation { animation: marquee-reverse 20s linear infinite; }
-        .marquee-mask {
-          mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
-          -webkit-mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+        @keyframes marquee-left {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
         }
-        
-        @media (min-width: 768px) {
-          .marquee-animation { animation: marquee 28s linear infinite; }
-          .marquee-reverse-animation { animation: marquee-reverse 28s linear infinite; }
+
+        @keyframes marquee-right {
+          0% { transform: translateX(-50%); }
+          100% { transform: translateX(0); }
         }
-        
-        @media (min-width: 1024px) {
-          .marquee-animation { animation: marquee 35s linear infinite; }
-          .marquee-reverse-animation { animation: marquee-reverse 35s linear infinite; }
-          .marquee-mask {
-            mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
-          }
+
+        .marquee-left {
+          animation: marquee-left 38s linear infinite;
+        }
+
+        .marquee-right {
+          animation: marquee-right 45s linear infinite;
+        }
+
+        .marquee-left:hover,
+        .marquee-right:hover {
+          animation-play-state: paused;
         }
       `}} />
+
       <p
-        className={`text-center text-[11px] font-semibold tracking-widest uppercase mb-8 ${
-          darkMode ? 'text-zinc-600' : 'text-zinc-400'
-        }`}
+        style={{
+          fontFamily: "'Space Grotesk', sans-serif",
+          fontSize: 'clamp(8px, 2vw, 9px)',
+          fontWeight: '600',
+          color: 'rgba(255,255,255,0.2)',
+          letterSpacing: '0.2em',
+          textTransform: 'uppercase',
+          textAlign: 'center',
+          marginBottom: 'clamp(24px, 5vw, 32px)',
+          padding: '0 20px',
+        }}
       >
         Trusted by 120+ financial institutions across Africa
       </p>
-      <Track reverse={false} darkMode={darkMode} />
-      <div className="hidden md:block">
-        <Track reverse={true} darkMode={darkMode} />
+
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '20px',
+        }}
+      >
+        <div
+          style={{
+            position: 'relative',
+            width: '100%',
+            overflow: 'hidden',
+            maskImage: 'linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)',
+          }}
+        >
+          <div
+            className="marquee-left"
+            style={{
+              display: 'flex',
+              width: 'max-content',
+              alignItems: 'center',
+            }}
+          >
+            {[...row1, ...row1].map((name, i) => (
+              <MarqueeItem key={i} name={name} />
+            ))}
+          </div>
+        </div>
+
+        <div
+          style={{
+            position: 'relative',
+            width: '100%',
+            overflow: 'hidden',
+            maskImage: 'linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)',
+          }}
+        >
+          <div
+            className="marquee-right"
+            style={{
+              display: 'flex',
+              width: 'max-content',
+              alignItems: 'center',
+            }}
+          >
+            {[...row2, ...row2].map((name, i) => (
+              <MarqueeItem key={i} name={name} />
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
