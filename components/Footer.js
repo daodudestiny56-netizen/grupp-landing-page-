@@ -24,12 +24,7 @@ export default function Footer({ darkMode }) {
         <div className="grid grid-cols-2 md:grid-cols-6 gap-y-12 md:gap-x-10 pb-12 md:pb-16">
           {/* Brand */}
           <div className="col-span-2 md:col-span-3">
-            <p className={`text-sm font-semibold mb-2 ${darkMode ? 'text-zinc-400' : 'text-zinc-500'}`}>
-              Powered by:
-            </p>
-            <h3 className="font-extrabold text-[clamp(28px,4vw,32px)] text-sky-500 mb-6">
-              Clane
-            </h3>
+            {/* Powered by Clane removed */}
           </div>
 
           {/* Link columns */}
