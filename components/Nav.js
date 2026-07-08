@@ -1,304 +1,446 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowRight, Menu, X } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 
-const LINKS = [
-  { label: 'Home', href: '#' },
+const navLinks = [
+  { label: 'Home', href: '/' },
   { label: 'Products', href: '#products' },
+  { label: 'Why Grupp', href: '#why' },
+  { label: 'Docs', href: '/docs' },
 ];
 
-export default function Nav({ darkMode }) {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [active, setActive] = useState('Home');
-  const [hovered, setHovered] = useState(null);
-  const [indicator, setIndicator] = useState(null);
+function NavLink({ link }) {
+  const [hovered, setHovered] = useState(false);
+  const isActive = false; // Add logic if needed based on pathname
 
-  const navRef = useRef(null);
-  const linkRefs = useRef({});
+  return (
+    <Link
+      href={link.href}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        height: '36px',
+        padding: '0 14px',
+        borderRadius: '100px',
+        fontFamily: "'Space Grotesk', sans-serif",
+        fontSize: '14px',
+        fontWeight: hovered || isActive ? '600' : '500',
+        color: isActive
+          ? '#ffffff'
+          : hovered
+          ? '#ffffff'
+          : 'rgba(255, 255, 255, 0.6)',
+        textDecoration: 'none',
+        background: hovered
+          ? 'rgba(255, 255, 255, 0.07)'
+          : isActive
+          ? 'rgba(255, 255, 255, 0.1)'
+          : 'transparent',
+        transition: 'color 0.2s ease, background 0.2s ease, font-weight 0s',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {link.label}
+
+      {isActive && (
+        <span
+          style={{
+            position: 'absolute',
+            bottom: '4px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '4px',
+            height: '4px',
+            borderRadius: '50%',
+            background: '#0085FF',
+          }}
+        />
+      )}
+    </Link>
+  );
+}
+
+function Logo() {
+  return (
+    <Link
+      href="/"
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        textDecoration: 'none',
+        flexShrink: 0,
+      }}
+    >
+      <span
+        style={{
+          fontFamily: "'Bricolage Grotesque', sans-serif",
+          fontSize: '20px',
+          fontWeight: '800',
+          color: '#ffffff',
+          letterSpacing: '-0.04em',
+          lineHeight: 1,
+        }}
+      >
+        grupp
+      </span>
+      <span
+        style={{
+          width: '6px',
+          height: '6px',
+          borderRadius: '50%',
+          background: '#0085FF',
+          display: 'inline-block',
+          marginLeft: '-4px',
+          marginBottom: '2px',
+          flexShrink: 0,
+          boxShadow: '0 0 8px rgba(0, 133, 255, 0.6)',
+        }}
+      />
+    </Link>
+  );
+}
+
+function CTAButton() {
+  return (
+    <Link
+      href="/get-started"
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '8px',
+        height: '44px',
+        padding: '0 20px 0 24px',
+        background: '#0085FF',
+        borderRadius: '100px',
+        fontFamily: "'Space Grotesk', sans-serif",
+        fontSize: '14px',
+        fontWeight: '700',
+        color: '#ffffff',
+        textDecoration: 'none',
+        letterSpacing: '-0.01em',
+        whiteSpace: 'nowrap',
+        flexShrink: 0,
+        transition: 'background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease',
+        boxShadow: '0 0 0 1px rgba(0,133,255,0.5) inset',
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.background = '#3DAAFF';
+        e.currentTarget.style.boxShadow = '0 0 24px rgba(0,133,255,0.5), 0 0 0 1px rgba(61,170,255,0.6) inset';
+        e.currentTarget.style.transform = 'scale(1.02)';
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.background = '#0085FF';
+        e.currentTarget.style.boxShadow = '0 0 0 1px rgba(0,133,255,0.5) inset';
+        e.currentTarget.style.transform = 'scale(1)';
+      }}
+    >
+      Get Started
+      <span
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '26px',
+          height: '26px',
+          borderRadius: '50%',
+          background: 'rgba(255,255,255,0.2)',
+          transition: 'background 0.2s ease, transform 0.2s ease',
+        }}
+      >
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <path
+            d="M2 6H10M10 6L6.5 2.5M10 6L6.5 9.5"
+            stroke="white"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </span>
+    </Link>
+  );
+}
+
+function MenuButton({ open, onClick, buttonRef }) {
+  return (
+    <button
+      ref={buttonRef}
+      onClick={onClick}
+      style={{
+        width: '44px',
+        height: '44px',
+        borderRadius: '50%',
+        background: open ? 'rgba(255,255,255,0.1)' : 'transparent',
+        border: '1px solid',
+        borderColor: open
+          ? 'rgba(61,170,255,0.3)'
+          : 'rgba(255,255,255,0.1)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+        transition: 'background 0.2s ease, border-color 0.2s ease',
+        flexShrink: 0,
+        WebkitTapHighlightColor: 'transparent',
+      }}
+      aria-label={open ? 'Close menu' : 'Open menu'}
+      aria-expanded={open}
+    >
+      <div style={{ position: 'relative', width: '18px', height: '12px' }}>
+        <span style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '18px',
+          height: '1.5px',
+          background: '#ffffff',
+          borderRadius: '2px',
+          transformOrigin: 'center',
+          transition: 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease',
+          transform: open ? 'translateY(5.25px) rotate(45deg)' : 'none',
+        }} />
+        <span style={{
+          position: 'absolute',
+          top: '50%',
+          left: 0,
+          marginTop: '-0.75px',
+          width: '14px',
+          height: '1.5px',
+          background: '#ffffff',
+          borderRadius: '2px',
+          transition: 'opacity 0.2s ease, width 0.2s ease',
+          opacity: open ? 0 : 1,
+        }} />
+        <span style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          width: '18px',
+          height: '1.5px',
+          background: '#ffffff',
+          borderRadius: '2px',
+          transformOrigin: 'center',
+          transition: 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease',
+          transform: open ? 'translateY(-5.25px) rotate(-45deg)' : 'none',
+        }} />
+      </div>
+    </button>
+  );
+}
+
+export default function Nav() {
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  
+  const menuButtonRef = useRef(null);
+  const drawerFirstLinkRef = useRef(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    const handleScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleMouseEnter = useCallback((label) => {
-    setHovered(label);
-    const el = linkRefs.current[label];
-    const nav = navRef.current;
-    if (el && nav) {
-      const navRect = nav.getBoundingClientRect();
-      const elRect = el.getBoundingClientRect();
-      setIndicator({
-        left: elRect.left - navRect.left + 10,
-        width: elRect.width - 20,
-      });
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden';
+      const timeout = setTimeout(() => {
+        drawerFirstLinkRef.current?.focus();
+      }, 100);
+      return () => clearTimeout(timeout);
+    } else {
+      document.body.style.overflow = '';
     }
-  }, []);
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [menuOpen]);
 
-  const handleMouseLeave = useCallback(() => {
-    setHovered(null);
-    setIndicator(null);
-  }, []);
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && menuOpen) {
+        setMenuOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [menuOpen]);
 
   return (
     <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
-        .gn-wrap {
-          position: fixed;
-          top: 20px;
-          left: 0; right: 0;
-          z-index: 50;
-          display: flex;
-          justify-content: center;
-          padding: 0 16px;
-          pointer-events: none;
-          font-family: 'Inter', sans-serif;
-          -webkit-font-smoothing: antialiased;
-        }
-
-        .gn-pill {
-          pointer-events: auto;
-          position: relative;
-          width: 100%;
-          max-width: 900px;
-          height: 54px;
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          padding: 0 22px;
-          border-radius: 999px;
-          border: 1px solid rgba(255,255,255,0.14);
-          transition: background 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .gn-logo {
-          display: flex;
-          align-items: center;
-          text-decoration: none;
-          user-select: none;
-          flex-shrink: 0;
-          line-height: 1;
-        }
-        .gn-logo-text {
-          font-size: 18px;
-          font-weight: 800;
-          letter-spacing: -0.045em;
-          line-height: 1;
-          color: #fff;
-        }
-        .gn-logo-dot { color: #38bdf8; }
-
-        .gn-links {
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          transform: translate(-50%, -50%);
-          display: flex;
-          align-items: center;
-          gap: 2px;
-        }
-
-        .gn-link {
-          position: relative;
-          padding: 6px 14px;
-          font-size: 14px;
-          font-weight: 500;
-          line-height: 1;
-          text-decoration: none;
-          border-radius: 6px;
-          transition: color 0.18s ease;
-          white-space: nowrap;
-          cursor: pointer;
-        }
-
-        .gn-link-active { color: #ffffff; }
-        .gn-link-muted  { color: rgba(255,255,255,0.45); }
-        .gn-link-muted:hover { color: rgba(255,255,255,0.8); }
-
-        .gn-indicator {
-          position: absolute;
-          bottom: -2px;
-          height: 2px;
-          border-radius: 999px;
-          background: #38bdf8;
-          transition: left 0.28s cubic-bezier(0.65,0,0.35,1),
-                      width 0.28s cubic-bezier(0.65,0,0.35,1);
-        }
-
-        .gn-right {
-          margin-left: auto;
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          flex-shrink: 0;
-        }
-
-        .gn-cta {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          background: #0ea5e9;
-          color: #fff;
-          font-size: 13px;
-          font-weight: 600;
-          padding: 8px 16px;
-          border-radius: 999px;
-          text-decoration: none;
-          box-shadow: 0 2px 10px rgba(14,165,233,0.28);
-          transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1),
-                      box-shadow 0.2s ease,
-                      background 0.15s ease;
-          white-space: nowrap;
-        }
-        .gn-cta:hover {
-          background: #38bdf8;
-          transform: translateY(-1.5px);
-          box-shadow: 0 0 0 3px rgba(14,165,233,0.2), 0 6px 18px rgba(14,165,233,0.3);
-        }
-        .gn-cta:hover .gn-arrow { transform: translateX(3px); }
-        .gn-arrow {
-          display: inline-flex;
-          align-items: center;
-          transition: transform 0.2s ease;
-        }
-
-        .gn-hamburger {
-          display: none;
-          align-items: center;
-          justify-content: center;
-          width: 34px; height: 34px;
-          border-radius: 50%;
-          border: none;
-          background: transparent;
-          color: rgba(255,255,255,0.6);
-          cursor: pointer;
-          transition: background 0.2s, color 0.2s;
-        }
-        .gn-hamburger:hover { background: rgba(255,255,255,0.1); color: #fff; }
-        @media (max-width: 767px) { .gn-hamburger { display: flex; } .gn-cta { display: none; } }
-
-        .gn-mobile {
-          pointer-events: auto;
-          position: absolute;
-          top: calc(100% + 8px);
-          left: 16px; right: 16px;
-          background: rgba(8,8,18,0.9);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          border: 1px solid rgba(255,255,255,0.1);
-          border-radius: 20px;
-          box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-          padding: 12px;
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-        }
-        .gn-mobile-link {
-          padding: 12px 16px;
-          border-radius: 10px;
-          font-size: 15px;
-          font-weight: 500;
-          color: rgba(255,255,255,0.65);
-          text-decoration: none;
-          transition: background 0.15s, color 0.15s;
-        }
-        .gn-mobile-link:hover { background: rgba(255,255,255,0.07); color: #fff; }
-        .gn-mobile-divider { border-top: 1px solid rgba(255,255,255,0.08); margin: 8px 0; }
-        .gn-mobile-cta {
-          display: flex; align-items: center; justify-content: center;
-          gap: 6px; background: #0ea5e9; color: #fff;
-          font-size: 14px; font-weight: 600;
-          padding: 12px; border-radius: 10px; text-decoration: none;
-        }
-      `}</style>
-
-      <nav className="gn-wrap" aria-label="Main navigation">
-        {/* Pill */}
-        <div
-          className="gn-pill"
+      <motion.div
+        initial={{ opacity: 0, y: -16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+        style={{
+          position: 'fixed',
+          top: '20px',
+          left: '0',
+          right: '0',
+          margin: '0 auto',
+          width: 'calc(100% - 48px)',
+          maxWidth: '1100px',
+          zIndex: 100,
+        }}
+      >
+        <nav
+          className="w-full h-[52px] md:h-[56px] lg:h-[60px] pl-[20px] md:pl-[24px] pr-[8px]"
           style={{
-            background: scrolled ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.08)',
-            backdropFilter: 'blur(20px) saturate(180%)',
-            WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            overflow: 'visible',
+            background: scrolled
+              ? 'rgba(5, 13, 26, 0.82)'
+              : 'rgba(5, 13, 26, 0.65)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            border: scrolled
+              ? '1px solid rgba(61, 170, 255, 0.18)'
+              : '1px solid rgba(255, 255, 255, 0.08)',
+            borderRadius: '100px',
+            transition: 'background 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease',
             boxShadow: scrolled
-              ? '0 2px 24px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.14)'
-              : '0 2px 14px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.1)',
+              ? '0 8px 32px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255,255,255,0.04) inset'
+              : '0 4px 24px rgba(0, 0, 0, 0.2)',
           }}
         >
-          {/* Logo */}
-          <a href="/" className="gn-logo">
-            <span className="gn-logo-text">grupp<span className="gn-logo-dot">.</span></span>
-          </a>
-
-          {/* Center links — absolutely centered in the pill */}
-          <div className="gn-links" ref={navRef} onMouseLeave={handleMouseLeave}>
-            {LINKS.map(({ label, href }) => {
-              const isActive = active === label;
-              const isHov = hovered === label;
-              return (
-                <a
-                  key={label}
-                  href={href}
-                  ref={(el) => { linkRefs.current[label] = el; }}
-                  onClick={() => setActive(label)}
-                  onMouseEnter={() => handleMouseEnter(label)}
-                  className={`gn-link ${isHov || (isActive && !hovered) ? 'gn-link-active' : 'gn-link-muted'}`}
-                >
-                  {label}
-                </a>
-              );
-            })}
-
-            {hovered && indicator && (
-              <span
-                className="gn-indicator"
-                style={{ left: indicator.left, width: indicator.width }}
-              />
-            )}
+          {/* Mobile layout */}
+          <div className="flex items-center justify-between w-full lg:hidden">
+            <Logo />
+            <MenuButton open={menuOpen} onClick={() => setMenuOpen(!menuOpen)} buttonRef={menuButtonRef} />
           </div>
 
-          {/* Right: CTA + hamburger */}
-          <div className="gn-right">
-            <Link href="#" className="gn-cta">
-              Get Started
-              <span className="gn-arrow"><ArrowRight size={12} strokeWidth={2.5} /></span>
-            </Link>
-            <button
-              className="gn-hamburger"
-              onClick={() => setMobileOpen((v) => !v)}
-              aria-label="Toggle menu"
+          {/* Desktop layout */}
+          <div className="hidden lg:flex items-center justify-between w-full relative" style={{ gap: '8px' }}>
+            <Logo />
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+              }}
             >
-              {mobileOpen ? <X size={16} /> : <Menu size={16} />}
-            </button>
+              {navLinks.map((link, i) => (
+                <NavLink key={link.href} link={link} index={i} />
+              ))}
+            </div>
+            <CTAButton />
           </div>
-        </div>
+        </nav>
+      </motion.div>
 
-        {/* Mobile dropdown */}
-        {mobileOpen && (
-          <div className="gn-mobile">
-            {LINKS.map(({ label, href }) => (
-              <a
-                key={label}
-                href={href}
-                className="gn-mobile-link"
-                onClick={() => { setActive(label); setMobileOpen(false); }}
-              >
-                {label}
-              </a>
-            ))}
-            <div className="gn-mobile-divider" />
-            <Link href="#" className="gn-mobile-cta">
-              Get Started <ArrowRight size={14} strokeWidth={2.5} />
+      {/* Mobile Drawer */}
+      <div
+        aria-hidden={!menuOpen}
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 99,
+          background: 'rgba(5, 13, 26, 0.97)',
+          backdropFilter: 'blur(24px)',
+          WebkitBackdropFilter: 'blur(24px)',
+          display: 'flex',
+          flexDirection: 'column',
+          padding: '100px 32px 48px',
+          transform: menuOpen ? 'translateX(0)' : 'translateX(100%)',
+          transition: 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)',
+          overflowY: 'auto',
+          pointerEvents: menuOpen ? 'auto' : 'none',
+        }}
+      >
+        <nav style={{ flex: 1 }}>
+          {navLinks.map((link, i) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={() => setMenuOpen(false)}
+              ref={i === 0 ? drawerFirstLinkRef : null}
+              style={{
+                display: 'block',
+                fontFamily: "'Bricolage Grotesque', sans-serif",
+                fontSize: 'clamp(36px, 8vw, 48px)',
+                fontWeight: '800',
+                color: '#ffffff',
+                textDecoration: 'none',
+                letterSpacing: '-0.03em',
+                lineHeight: '1.1',
+                paddingTop: '20px',
+                paddingBottom: '20px',
+                borderBottom: '1px solid rgba(255,255,255,0.07)',
+                opacity: menuOpen ? 1 : 0,
+                transform: menuOpen ? 'translateY(0)' : 'translateY(16px)',
+                transition: `opacity 0.4s ease ${0.1 + i * 0.06}s, transform 0.4s cubic-bezier(0.22,1,0.36,1) ${0.1 + i * 0.06}s`,
+              }}
+            >
+              {link.label}
             </Link>
-          </div>
-        )}
-      </nav>
+          ))}
+        </nav>
+
+        <div
+          style={{
+            marginTop: '48px',
+            opacity: menuOpen ? 1 : 0,
+            transform: menuOpen ? 'translateY(0)' : 'translateY(16px)',
+            transition: 'opacity 0.4s ease 0.38s, transform 0.4s ease 0.38s',
+          }}
+        >
+          <Link
+            href="/get-started"
+            onClick={() => setMenuOpen(false)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '10px',
+              width: '100%',
+              height: '56px',
+              background: '#0085FF',
+              borderRadius: '100px',
+              fontFamily: "'Space Grotesk', sans-serif",
+              fontSize: '16px',
+              fontWeight: '700',
+              color: '#ffffff',
+              textDecoration: 'none',
+              letterSpacing: '-0.01em',
+              boxShadow: '0 0 32px rgba(0,133,255,0.35)',
+              marginBottom: '20px',
+            }}
+          >
+            Get Started
+            <span style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              width: '30px', height: '30px', borderRadius: '50%',
+              background: 'rgba(255,255,255,0.2)',
+            }}>
+              →
+            </span>
+          </Link>
+
+          <p style={{
+            textAlign: 'center',
+            fontSize: '13px',
+            color: 'rgba(255,255,255,0.35)',
+            fontFamily: "'Space Grotesk', sans-serif",
+          }}>
+            Questions?{' '}
+            <a
+              href="mailto:info@trygrupp.africa"
+              style={{ color: '#3DAAFF', textDecoration: 'none' }}
+            >
+              info@trygrupp.africa
+            </a>
+          </p>
+        </div>
+      </div>
     </>
   );
 }

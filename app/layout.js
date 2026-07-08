@@ -1,5 +1,6 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
+import Nav from '@/components/Nav';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -27,6 +28,7 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className={`${inter.className} antialiased`}>
+        <Nav />
         {children}
       </body>
     </html>
