@@ -1,8 +1,8 @@
-/* ── Google Fonts (must precede tailwindcss import) ──── */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Space+Grotesk:wght@500;600;700&display=swap');
-
 @import "tailwindcss";
+
+/* Fonts are loaded via next/font in app/layout.js, which self-hosts them at
+   build time. The old @import url(fonts.googleapis.com) lines were pure
+   render-blocking latency — two extra DNS + TLS round trips before first paint. */
 
 @theme {
   --breakpoint-xs: 360px;
@@ -13,208 +13,216 @@
   --breakpoint-2xl: 1440px;
 }
 
-:root {
-  --page-px: 20px;
-}
-@media (min-width: 768px) {
-  :root { --page-px: 36px; }
-}
-@media (min-width: 1024px) {
-  :root { --page-px: 48px; }
-}
-@media (min-width: 1280px) {
-  :root { --page-px: 60px; }
-}
-@media (min-width: 1440px) {
-  :root { --page-px: 80px; }
+@theme inline {
+  --font-sans: var(--font-body);        /* Inter — body copy, UI */
+  --font-brand: var(--font-bricolage);  /* Bricolage Grotesque — headings, brand */
+  --font-serif: var(--font-accent);     /* the italic accent face */
 }
 
-/* ── Base resets ─────────────────────────────────────── */
-*, *::before, *::after {
-  box-sizing: border-box;
+/* ── Brand palette ────────────────────────────────────
+   Recovered from the live site's own DOM, not guessed. */
+:root {
+  --ink:        #182F43;  /* headings */
+  --body:       #56616C;  /* body copy (darkened from their #7E7E7E for AA) */
+  --muted:      #797F85;  /* captions, meta */
+  --brand:      #23A2FD;  /* logo blue */
+  --brand-soft: #4AB2E5;  /* UI blue */
+  --brand-deep: #006A9E;  /* labels, links on pale */
+  --pale:       #DEF4FF;  /* pale panel */
+  --pale-2:     #D9F7FF;  /* pale panel alt */
+  --navy:       #021230;  /* dark punctuation sections */
+  --amber:      #F5A524;  /* secondary accent, drawn from the danfo buses */
+  --surface:    #FBFAF8;  /* warm off-white page base */
+  --card:       #FFFFFF;
+  --line:       rgba(24, 47, 67, 0.10);
+
+  --page-px: 20px;
+  --nav-h: 72px;
 }
+
+@media (min-width: 768px)  { :root { --page-px: 36px; } }
+@media (min-width: 1024px) { :root { --page-px: 48px; } }
+@media (min-width: 1280px) { :root { --page-px: 60px; } }
+@media (min-width: 1440px) { :root { --page-px: 80px; } }
+
+/* ── Base ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
 
 html {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Anchors must not land underneath the fixed nav. */
+  scroll-padding-top: calc(var(--nav-h) + 24px);
+}
+
+/* Smooth scroll only where motion is welcome. Next.js 16 no longer overrides
+   scroll-behavior during navigation, so <html> carries data-scroll-behavior. */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
 }
 
 body {
-  overflow-x: hidden;
-  min-width: 360px;
+  background: var(--surface);
+  color: var(--body);
+  min-width: 320px;
+  /* `clip`, NOT `hidden`. overflow-x:hidden computes overflow-y to `auto`,
+     which creates a scroll container and silently breaks `position: sticky`
+     on the How-it-works section. `clip` does not create one. Also note it is
+     on body only — never on html. */
+  overflow-x: clip;
 }
 
-img, video {
-  max-width: 100%;
-  display: block;
+img, video { max-width: 100%; display: block; }
+
+/* Headings take the display face; body copy stays on Inter. One rule, so no
+   component needs to carry a font class. */
+h1, h2, h3, h4 {
+  font-family: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  color: var(--ink);
+  text-wrap: balance;
+  /* Bricolage runs optically loose at display sizes; pull it in. */
+  letter-spacing: -0.015em;
 }
 
-/* ── Touch and Interaction ───────────────────────────── */
-button, a, [role="button"] {
-  min-height: 44px;
-  min-width: 44px;
+p { text-wrap: pretty; }
+
+/* The italic accent. Applied via Tailwind's font-serif utility. */
+.font-serif {
+  font-family: var(--font-accent), Georgia, serif;
+  font-optical-sizing: auto;
+}
+
+/* ── Touch targets ────────────────────────────────────── */
+button, a[role="button"], [role="button"] {
   -webkit-tap-highlight-color: transparent;
 }
 
 @media (hover: none) {
-  button:hover, a:hover, [role="button"]:hover {
-    transform: none !important;
-  }
+  button:hover, a:hover, [role="button"]:hover { transform: none !important; }
 }
 
-/* ── Custom scrollbar ────────────────────────────────── */
-* {
-  scrollbar-color: #0ea5e9 transparent;
-  scrollbar-width: thin;
-}
-
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #0ea5e9;
-  border-radius: 99px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #0284c7;
-}
-
-/* ── Focus ring ──────────────────────────────────────── */
+/* ── Focus ────────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid #0ea5e9;
-  outline-offset: 2px;
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
-/* ── Marquee animations ──────────────────────────────── */
-@keyframes marquee {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-33.333%); }
+/* ── Scrollbar ────────────────────────────────────────── */
+* { scrollbar-color: var(--brand-soft) transparent; scrollbar-width: thin; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--brand-soft); border-radius: 99px; }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Hero entrance ────────────────────────────────────────
+   Deliberately CSS, not framer-motion. framer serializes `initial` into the
+   SSR inline style, so an animated above-the-fold element ships as opacity:0
+   and stays invisible if hydration is slow or fails. CSS keyframes run with
+   zero JS and survive that. */
+@keyframes fade-rise {
+  from { opacity: 0; transform: translate3d(0, 16px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 
-@keyframes marquee-reverse {
-  0%   { transform: translateX(-33.333%); }
-  100% { transform: translateX(0); }
+.fade-rise {
+  animation: fade-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* ── Floating blobs ──────────────────────────────────── */
-@keyframes float {
-  0%, 100% { transform: translateY(0px) scale(1); }
-  50%       { transform: translateY(-24px) scale(1.02); }
+/* The one hero "moment": the offset accent block settles in behind the photo.
+   The photo itself never animates — it is the LCP element, and an opacity:0
+   image is disqualified as an LCP candidate until hydration. */
+@keyframes frame-settle {
+  from { opacity: 0; transform: translate3d(-12px, 12px, 0) scale(0.98); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
 }
 
-/* ── Hide scrollbar utility ──────────────────────────── */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+.frame-settle {
+  animation: frame-settle 1s cubic-bezier(0.33, 1, 0.68, 1) 0.15s both;
 }
 
-/* ── Moving background blobs ─────────────────────────── */
-@keyframes blob-1 {
-  0% { transform: translate(0px, 0px) scale(1); }
-  33% { transform: translate(40px, -60px) scale(1.15); }
-  66% { transform: translate(-30px, 30px) scale(0.9); }
-  100% { transform: translate(0px, 0px) scale(1); }
+/* Idle float for the hero's transaction card. */
+@keyframes idle-float {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(0, -6px, 0); }
 }
 
-@keyframes blob-2 {
-  0% { transform: translate(0px, 0px) scale(1); }
-  50% { transform: translate(-60px, 80px) scale(1.1); }
-  100% { transform: translate(0px, 0px) scale(1); }
+.idle-float {
+  animation: idle-float 5.5s cubic-bezier(0.65, 0, 0.35, 1) infinite alternate;
 }
 
-@keyframes blob-3 {
-  0% { transform: translate(0px, 0px) scale(1); }
-  33% { transform: translate(50px, 50px) scale(0.95); }
-  66% { transform: translate(-40px, -50px) scale(1.15); }
-  100% { transform: translate(0px, 0px) scale(1); }
+/* ── Marquee ──────────────────────────────────────────────
+   Animates ONE element (the track), not N items. Track is duplicated exactly
+   2x and travels -50%. Zero JS, zero React. */
+@keyframes marquee-left {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
 }
 
-.animate-blob-1 {
-  animation: blob-1 20s infinite alternate ease-in-out;
-}
-.animate-blob-2 {
-  animation: blob-2 25s infinite alternate ease-in-out;
-}
-.animate-blob-3 {
-  animation: blob-3 22s infinite alternate ease-in-out;
+@keyframes marquee-right {
+  from { transform: translate3d(-50%, 0, 0); }
+  to   { transform: translate3d(0, 0, 0); }
 }
 
-/* ── focus-in-contract animation ─────────────────────── */
-.focus-in-contract {
-	-webkit-animation: focus-in-contract 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-	        animation: focus-in-contract 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+.marquee-track {
+  display: flex;
+  width: max-content;
+  /* The only legitimate permanent will-change on the page — this genuinely
+     animates forever. */
+  will-change: transform;
 }
 
-@-webkit-keyframes focus-in-contract {
-  0% {
-    letter-spacing: 0.4em;
-    -webkit-filter: blur(12px);
-            filter: blur(12px);
-    opacity: 0;
+.marquee-left  { animation: marquee-left 44s linear infinite; }
+.marquee-right { animation: marquee-right 52s linear infinite; }
+
+@media (hover: hover) {
+  .marquee-row:hover .marquee-track { animation-play-state: paused; }
+}
+
+.marquee-mask {
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+/* ── Live pulse ───────────────────────────────────────────
+   A scaling ring, not an animated box-shadow. Animating box-shadow spread
+   repaints a large area 60x/sec, forever. */
+@keyframes pulse-ring {
+  from { transform: scale(1);   opacity: 0.55; }
+  to   { transform: scale(2.6); opacity: 0; }
+}
+
+.pulse-ring { animation: pulse-ring 2.4s cubic-bezier(0.33, 1, 0.68, 1) infinite; }
+
+/* ── Reduced motion ───────────────────────────────────────
+   globals.css previously had no such block at all, so the CSS animations
+   ignored the OS setting entirely. framer-motion is handled separately by
+   <MotionConfig reducedMotion="user"> in MotionProvider. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
-  100% {
-    letter-spacing: -0.025em;
-    -webkit-filter: blur(0px);
-            filter: blur(0px);
-    opacity: 1;
+
+  /* Marquee content stays reachable by swipe once the animation is gone. */
+  .marquee-track {
+    animation: none !important;
+    will-change: auto;
+  }
+  .marquee-row {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
   }
 }
 
-@keyframes focus-in-contract {
-  0% {
-    letter-spacing: 0.4em;
-    -webkit-filter: blur(12px);
-            filter: blur(12px);
-    opacity: 0;
-  }
-  100% {
-    letter-spacing: -0.025em;
-    -webkit-filter: blur(0px);
-            filter: blur(0px);
-    opacity: 1;
-  }
-}
-
-/* ── slide-in-right animation ────────────────────────── */
-.slide-in-right {
-	-webkit-animation: slide-in-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-	        animation: slide-in-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-}
-
-@-webkit-keyframes slide-in-right {
-  0% {
-    -webkit-transform: translateX(1000px);
-            transform: translateX(1000px);
-    opacity: 0;
-  }
-  100% {
-    -webkit-transform: translateX(0);
-            transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slide-in-right {
-  0% {
-    -webkit-transform: translateX(1000px);
-            transform: translateX(1000px);
-    opacity: 0;
-  }
-  100% {
-    -webkit-transform: translateX(0);
-            transform: translateX(0);
-    opacity: 1;
-  }
+/* ── Last line of defence ─────────────────────────────────
+   If JS never arrives, nothing below the fold should stay invisible. */
+@media (scripting: none) {
+  [data-reveal] { opacity: 1 !important; transform: none !important; }
 }

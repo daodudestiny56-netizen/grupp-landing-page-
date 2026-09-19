@@ -1,85 +1,75 @@
-'use client';
+import { Reveal, RevealGroup, RevealItem } from '@/components/motion/Reveal';
+import { WHY } from '@/lib/content';
 
-import { Sparkles, Zap, ShieldCheck, Heart } from 'lucide-react';
-import { FadeSlideUp, SlideInRight } from '@/components/ScrollAnimations';
+// Inline SVG icons as server markup — no client JS, one fewer dependency
+// than pulling these from lucide-react.
+const ICONS = {
+  Transformation: (
+    <path
+      d="M12 3v3m0 12v3m9-9h-3M6 12H3m14.5-5.5-2 2m-7 7-2 2m0-11 2 2m7 7 2 2"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+    />
+  ),
+  Speed: <path d="m13 2-8 11h6l-1 9 8-11h-6l1-9Z" strokeWidth="1.8" strokeLinejoin="round" />,
+  'Fully Licensed': (
+    <>
+      <path d="M12 3 4 6.5v5c0 4.7 3.3 8.6 8 9.5 4.7-.9 8-4.8 8-9.5v-5L12 3Z" strokeWidth="1.8" strokeLinejoin="round" />
+      <path d="m9 12 2 2 4-4" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </>
+  ),
+  Neutrality: (
+    <>
+      <circle cx="12" cy="12" r="9" strokeWidth="1.8" />
+      <path d="M12 3v18M3 12h18" strokeWidth="1.8" />
+    </>
+  ),
+};
 
 export default function WhyGruppSection() {
-  const points = [
-    {
-      title: 'Transformation',
-      description: 'Our easy to use Banking-as-a-Service platform allows digitization of rural and semi-urban communities.',
-      icon: <Sparkles size={20} className="text-sky-400" />,
-    },
-    {
-      title: 'Speed',
-      description: 'Instead of spending lots of resources on infrastructure and months integrating with different partners, Grupp can get you up and running in days.',
-      icon: <Zap size={20} className="text-sky-400" />,
-    },
-    {
-      title: 'Fully Licensed',
-      description: 'We handle the regulatory burdens and compliance related matters, so you can focus on your customers\' needs.',
-      icon: <ShieldCheck size={20} className="text-sky-400" />,
-    },
-    {
-      title: 'Neutrality',
-      description: 'We enable you with total control to meet your peculiar needs',
-      icon: <Heart size={20} className="text-sky-400" />,
-    },
-  ];
-
   return (
-    <section className="relative py-16 md:py-28 px-[var(--page-px)] bg-transparent text-white overflow-hidden border-y border-zinc-900 z-10">
-      {/* Sleek Grid Mesh */}
-      <div
-        className="absolute inset-0 opacity-[0.04] pointer-events-none"
-        style={{
-          backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 0)',
-          backgroundSize: '40px 40px',
-        }}
-      />
-
-      {/* Colorful Animated Glowing Blobs */}
-      <div className="absolute top-[10%] left-[5%] w-[450px] h-[450px] bg-sky-500/18 rounded-full blur-[110px] pointer-events-none animate-blob-1" />
-      <div className="absolute top-[40%] right-[10%] w-[500px] h-[500px] bg-indigo-500/15 rounded-full blur-[120px] pointer-events-none animate-blob-2" />
-      <div className="absolute bottom-[5%] left-[25%] w-[450px] h-[450px] bg-purple-500/15 rounded-full blur-[110px] pointer-events-none animate-blob-3" />
-
-      <div className="relative z-10 max-w-7xl mx-auto">
-        
-        {/* Header */}
-        <FadeSlideUp>
-          <div className="text-center max-w-2xl mx-auto mb-16 md:mb-20 space-y-4">
-            <h2 className="text-[clamp(32px,5vw,48px)] font-extrabold tracking-[-0.02em] bg-gradient-to-b from-white to-zinc-400 bg-clip-text text-transparent">
-              Why Grupp?
-            </h2>
-            <p className="text-[13px] sm:text-sm text-zinc-400 leading-relaxed max-w-[320px] sm:max-w-xl mx-auto">
-              Only a few numbers of Africa's bankable population has access to digital financial services.
-              Grupp is here to equalize access for all.
+    <section className="px-[var(--page-px)] py-20 md:py-28">
+      <div className="mx-auto max-w-[1280px]">
+        <Reveal>
+          <div className="mx-auto max-w-[40rem] text-center">
+            <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--brand-deep)]">
+              Why Grupp
             </p>
+            <h2 className="mt-5 text-[clamp(28px,4vw,46px)] font-extrabold leading-[1.1] tracking-[-0.03em] text-[var(--ink)]">
+              Four reasons institutions{' '}
+              <span className="font-serif font-normal italic text-[var(--brand)]">
+                choose us.
+              </span>
+            </h2>
           </div>
-        </FadeSlideUp>
+        </Reveal>
 
-        {/* Content Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-4xl mx-auto">
-          {points.map((point, i) => (
-            <SlideInRight key={point.title} delay={i * 0.1}>
-              <div
-                className="flex gap-4 md:gap-5 items-start p-5 rounded-2xl bg-white/[0.01] border border-white/5 hover:border-sky-500/20 hover:bg-white/[0.03] transition-all duration-350 hover:-translate-y-1 group h-full"
-              >
-                <div className="p-3.5 rounded-xl bg-sky-500/10 border border-sky-500/20 flex-shrink-0 text-sky-400 shadow-[0_0_15px_rgba(14,165,233,0.1)] group-hover:bg-sky-500 group-hover:text-white transition-all duration-300">
-                  {point.icon}
-                </div>
-                <div className="space-y-1">
-                  <h3 className="text-[15px] font-bold text-white tracking-tight group-hover:text-sky-300 transition-colors duration-300">
-                    {point.title}
-                  </h3>
-                  <p className="text-[13px] sm:text-sm text-zinc-400 leading-relaxed">
-                    {point.description}
-                  </p>
-                </div>
-              </div>
-            </SlideInRight>
+        <RevealGroup className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {WHY.map((item) => (
+            <RevealItem key={item.title}>
+              <article className="group h-full rounded-[20px] border border-[var(--line)] bg-white p-7 transition-transform duration-150 hover:-translate-y-0.5">
+                <span className="grid h-11 w-11 place-items-center rounded-xl bg-[var(--pale)] text-[var(--brand-deep)]">
+                  <svg
+                    width="21"
+                    height="21"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    aria-hidden
+                  >
+                    {ICONS[item.title]}
+                  </svg>
+                </span>
+                <h3 className="mt-5 text-[18px] font-bold tracking-[-0.01em] text-[var(--ink)]">
+                  {item.title}
+                </h3>
+                <p className="mt-3 text-[14.5px] leading-[1.7] text-[var(--body)]">
+                  {item.body}
+                </p>
+              </article>
+            </RevealItem>
           ))}
-        </div>
+        </RevealGroup>
       </div>
     </section>
   );

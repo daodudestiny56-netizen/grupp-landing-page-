@@ -1,107 +1,137 @@
-'use client';
+import Image from 'next/image';
+import { HERO } from '@/lib/content';
 
-import { ArrowRight } from 'lucide-react';
-import Link from 'next/link';
-import { FadeSlideUp } from '@/components/ScrollAnimations';
+// Server Component. Every animation here is CSS, so the fold renders and
+// animates with zero JavaScript — it cannot be left blank by slow hydration.
+
+function TransactionCard() {
+  return (
+    <div className="idle-float absolute -bottom-6 -left-4 w-[248px] rounded-2xl border border-[var(--line)] bg-white p-4 shadow-[0_16px_40px_rgba(24,47,67,0.14)] sm:-left-8 sm:w-[268px]">
+      <div className="flex items-center gap-2">
+        <span className="relative grid h-2 w-2 place-items-center">
+          <span className="pulse-ring absolute h-2 w-2 rounded-full bg-[var(--brand)]" />
+          <span className="h-2 w-2 rounded-full bg-[var(--brand)]" />
+        </span>
+        <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--brand-deep)]">
+          On Grupp
+        </span>
+      </div>
+
+      <div className="mt-3 flex items-center gap-3">
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[var(--pale)] text-[13px] font-bold text-[var(--brand-deep)]">
+          NK
+        </span>
+        <div className="min-w-0">
+          <p className="truncate text-[13px] font-semibold text-[var(--ink)]">Ngozi K.</p>
+          <p className="truncate text-[12px] text-[var(--muted)]">opened a savings account</p>
+        </div>
+      </div>
+
+      <div className="mt-3 flex items-baseline justify-between border-t border-[var(--line)] pt-3">
+        <span className="text-[11px] font-medium text-[var(--muted)]">Savings</span>
+        <span className="font-serif text-[18px] italic text-[var(--ink)]">&#8358;5,000</span>
+      </div>
+    </div>
+  );
+}
 
 export default function Hero() {
-  const prefersReducedMotion =
-    typeof window !== 'undefined'
-      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      : false;
-
   return (
     <section
-      style={{
-        position: 'relative',
-        overflow: 'hidden',
-        minHeight: '100svh',
-        width: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        backgroundColor: '#050D1A',
-      }}
+      id="top"
+      className="relative px-[var(--page-px)] pb-20 pt-[calc(var(--nav-h)+40px)] md:pb-28 md:pt-[calc(var(--nav-h)+72px)]"
     >
-      {!prefersReducedMotion && (
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute top-0 left-0 w-full h-full object-cover object-top md:object-center pointer-events-none z-0 opacity-40"
-          src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_064122_c4750c0e-7476-4b44-94a2-a85a65c63bf2.mp4"
-        />
-      )}
-
-      {/* Layer 1 — directional dark gradient */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'linear-gradient(to bottom, rgba(5,13,26,0.45) 0%, rgba(5,13,26,0.7) 60%, rgba(5,13,26,0.95) 100%)',
-          zIndex: 1,
-          pointerEvents: 'none',
-        }}
-      />
-
-      {/* Layer 2 — brand blue radial glow */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'radial-gradient(ellipse 65% 50% at 50% 45%, rgba(0,133,255,0.14) 0%, transparent 70%)',
-          zIndex: 2,
-          pointerEvents: 'none',
-        }}
-      />
-
-      {/* Hero content wrapper */}
-      <div
-        className="flex flex-col items-center text-center max-w-[1280px] mx-auto px-[var(--page-px)] w-full relative z-10"
-      >
-        {/* Badge */}
-        <FadeSlideUp delay={0}>
-          <div className="inline-flex items-center gap-2 text-[clamp(10px,1vw,11px)] font-semibold px-4 py-2 rounded-full border mb-8 bg-zinc-900/60 border-zinc-800 text-sky-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />
-            Community Banking as a Service
-          </div>
-        </FadeSlideUp>
-
-        {/* Headline */}
-        <h1 className="text-[clamp(40px,5vw,80px)] font-extrabold tracking-[-0.03em] leading-[1.0] mb-6 focus-in-contract text-white">
-          Digital Platform
-          <br />
-          <span
-            className="font-serif italic font-normal bg-gradient-to-r from-sky-500 to-sky-400 bg-clip-text text-transparent"
-            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+      <div className="mx-auto grid max-w-[1280px] items-center gap-14 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
+        {/* Copy */}
+        <div>
+          <p
+            className="fade-rise inline-flex items-center gap-2 rounded-full bg-[var(--pale)] px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--brand-deep)]"
+            style={{ animationDelay: '0s' }}
           >
-            for Community Banks.
-          </span>
-        </h1>
-
-        {/* Sub */}
-        <FadeSlideUp delay={0.2}>
-          <p className="text-[clamp(14px,1.2vw,17px)] max-w-[320px] md:max-w-2xl leading-[1.75] mb-10 text-zinc-400 mx-auto">
-            Our platform as a service empowers community banks with a variety of digitized
-            financial tools tailored to customers' needs in their brand.
+            {HERO.eyebrow}
           </p>
-        </FadeSlideUp>
 
-        {/* CTAs */}
-        <FadeSlideUp delay={0.3}>
-          <div className="flex flex-col sm:flex-row gap-3 mb-12 w-full max-w-[320px] sm:max-w-none mx-auto justify-center">
-            <Link
-              href="#"
-              className="flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-4 bg-sky-500 hover:bg-sky-400 text-white font-semibold text-sm rounded-xl transition-all duration-200 shadow-lg shadow-sky-500/30 hover:-translate-y-px hover:shadow-sky-400/40"
+          <h1 className="mt-6 text-[clamp(36px,5.4vw,62px)] font-extrabold leading-[1.04] tracking-[-0.035em] text-[var(--ink)]">
+            {HERO.headline.map((line, i) => (
+              <span
+                key={i}
+                className="fade-rise block"
+                style={{ animationDelay: `${0.08 + i * 0.08}s` }}
+              >
+                {i === HERO.accentLine ? (
+                  <span className="font-serif font-normal italic text-[var(--brand)]">
+                    {line}
+                  </span>
+                ) : (
+                  line
+                )}
+              </span>
+            ))}
+          </h1>
+
+          <p
+            className="fade-rise mt-6 max-w-[30rem] text-[clamp(15px,1.3vw,17px)] leading-[1.7] text-[var(--body)]"
+            style={{ animationDelay: '0.36s' }}
+          >
+            {HERO.sub}
+          </p>
+
+          <div
+            className="fade-rise mt-9 flex flex-col gap-3 sm:flex-row"
+            style={{ animationDelay: '0.46s' }}
+          >
+            <a
+              href={HERO.primaryCta.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-[52px] items-center justify-center gap-2 rounded-full bg-[var(--brand)] px-7 text-[15px] font-semibold text-white shadow-[0_8px_24px_rgba(35,162,253,0.28)] transition-colors duration-200 hover:bg-[var(--brand-soft)]"
             >
-              Start Building Free
-              <ArrowRight size={15} />
-            </Link>
-            <button className="flex items-center justify-center w-full sm:w-auto px-6 py-4 font-semibold text-sm rounded-xl border transition-all duration-200 border-zinc-800 text-zinc-300 hover:bg-zinc-900 hover:border-zinc-700">
-              View Documentation
-            </button>
+              {HERO.primaryCta.label}
+              <svg width="15" height="15" viewBox="0 0 12 12" fill="none" aria-hidden>
+                <path
+                  d="M2 6h8m0 0L6.5 2.5M10 6 6.5 9.5"
+                  stroke="currentColor"
+                  strokeWidth="1.7"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </a>
+            <a
+              href={HERO.secondaryCta.href}
+              className="inline-flex h-[52px] items-center justify-center rounded-full border border-[var(--line)] bg-white px-7 text-[15px] font-semibold text-[var(--ink)] transition-colors duration-200 hover:border-[var(--brand)] hover:text-[var(--brand-deep)]"
+            >
+              {HERO.secondaryCta.label}
+            </a>
           </div>
-        </FadeSlideUp>
+        </div>
+
+        {/* Photo. The image itself carries NO entrance animation: it is the LCP
+            element, and framer-motion would serialize opacity:0 into the SSR
+            markup, disqualifying it as an LCP candidate until hydration. The
+            motion lives in the accent frame behind it instead. */}
+        <div className="relative">
+          <div
+            aria-hidden
+            className="frame-settle absolute -bottom-4 -right-4 h-full w-full rounded-[28px] bg-[var(--amber)] opacity-90"
+          />
+          <div className="relative overflow-hidden rounded-[28px] shadow-[0_24px_60px_rgba(24,47,67,0.18)]">
+            <Image
+              src={HERO.photo.src}
+              alt={HERO.photo.alt}
+              width={1024}
+              height={682}
+              loading="eager"
+              fetchPriority="high"
+              sizes="(min-width: 1024px) 48vw, 92vw"
+              className="h-[300px] w-full object-cover sm:h-[380px] lg:h-[460px]"
+            />
+          </div>
+          <TransactionCard />
+          <p className="mt-8 pl-1 text-[11px] uppercase tracking-[0.14em] text-[var(--muted)] sm:mt-6">
+            {HERO.photo.caption}
+          </p>
+        </div>
       </div>
     </section>
   );

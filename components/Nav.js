@@ -2,382 +2,230 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
+import { BRAND, NAV_LINKS } from '@/lib/content';
+import { dur, spring } from '@/lib/motion';
 
-const navLinks = [
-  { label: 'Home', href: '/' },
-  { label: 'Products', href: '#products' },
-  { label: 'Why Grupp', href: '#why' },
-  { label: 'Docs', href: '/docs' },
-];
-
-function NavLink({ link }) {
-  const [hovered, setHovered] = useState(false);
-  const isActive = false; // Add logic if needed based on pathname
-
+export function Logo({ dark = false }) {
   return (
-    <Link
-      href={link.href}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        height: '36px',
-        padding: '0 14px',
-        borderRadius: '100px',
-        fontFamily: "'Space Grotesk', sans-serif",
-        fontSize: '14px',
-        fontWeight: hovered || isActive ? '600' : '500',
-        color: isActive
-          ? '#ffffff'
-          : hovered
-          ? '#ffffff'
-          : 'rgba(255, 255, 255, 0.6)',
-        textDecoration: 'none',
-        background: hovered
-          ? 'rgba(255, 255, 255, 0.07)'
-          : isActive
-          ? 'rgba(255, 255, 255, 0.1)'
-          : 'transparent',
-        transition: 'color 0.2s ease, background 0.2s ease, font-weight 0s',
-        whiteSpace: 'nowrap',
-      }}
-    >
-      {link.label}
-
-      {isActive && (
-        <span
-          style={{
-            position: 'absolute',
-            bottom: '4px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: '4px',
-            height: '4px',
-            borderRadius: '50%',
-            background: '#0085FF',
-          }}
-        />
-      )}
-    </Link>
-  );
-}
-
-function Logo() {
-  return (
-    <Link
-      href="/"
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-        textDecoration: 'none',
-        flexShrink: 0,
-      }}
-    >
+    <Link href="#top" aria-label="Grupp — home" className="flex items-center gap-2.5 shrink-0">
       <span
-        style={{
-          fontFamily: "'Bricolage Grotesque', sans-serif",
-          fontSize: '20px',
-          fontWeight: '800',
-          color: '#ffffff',
-          letterSpacing: '-0.04em',
-          lineHeight: 1,
-        }}
+        aria-hidden
+        className="grid h-8 w-8 place-items-center rounded-[10px] bg-[var(--brand)] text-white"
+      >
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <path
+            d="M21 12.2c0 5-3.9 8.8-9 8.8S3 17.2 3 12.2 6.9 3.4 12 3.4c2.4 0 4.5.8 6.1 2.2"
+            stroke="currentColor"
+            strokeWidth="2.6"
+            strokeLinecap="round"
+          />
+          <path d="M12 12.4h8.4" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" />
+        </svg>
+      </span>
+      <span
+        className={`font-brand text-[19px] font-extrabold tracking-[-0.04em] ${
+          dark ? 'text-white' : 'text-[var(--ink)]'
+        }`}
       >
         grupp
       </span>
-      <span
-        style={{
-          width: '6px',
-          height: '6px',
-          borderRadius: '50%',
-          background: '#0085FF',
-          display: 'inline-block',
-          marginLeft: '-4px',
-          marginBottom: '2px',
-          flexShrink: 0,
-          boxShadow: '0 0 8px rgba(0, 133, 255, 0.6)',
-        }}
-      />
     </Link>
   );
 }
 
-function CTAButton() {
+function CTA({ className = '', onClick }) {
   return (
-    <Link
-      href="/get-started"
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '8px',
-        height: '44px',
-        padding: '0 20px 0 24px',
-        background: '#0085FF',
-        borderRadius: '100px',
-        fontFamily: "'Space Grotesk', sans-serif",
-        fontSize: '14px',
-        fontWeight: '700',
-        color: '#ffffff',
-        textDecoration: 'none',
-        letterSpacing: '-0.01em',
-        whiteSpace: 'nowrap',
-        flexShrink: 0,
-        transition: 'background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease',
-        boxShadow: '0 0 0 1px rgba(0,133,255,0.5) inset',
-      }}
-      onMouseEnter={e => {
-        e.currentTarget.style.background = '#3DAAFF';
-        e.currentTarget.style.boxShadow = '0 0 24px rgba(0,133,255,0.5), 0 0 0 1px rgba(61,170,255,0.6) inset';
-        e.currentTarget.style.transform = 'scale(1.02)';
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.background = '#0085FF';
-        e.currentTarget.style.boxShadow = '0 0 0 1px rgba(0,133,255,0.5) inset';
-        e.currentTarget.style.transform = 'scale(1)';
-      }}
-    >
-      Get Started
-      <span
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '26px',
-          height: '26px',
-          borderRadius: '50%',
-          background: 'rgba(255,255,255,0.2)',
-          transition: 'background 0.2s ease, transform 0.2s ease',
-        }}
-      >
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-          <path
-            d="M2 6H10M10 6L6.5 2.5M10 6L6.5 9.5"
-            stroke="white"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </span>
-    </Link>
-  );
-}
-
-function MenuButton({ open, onClick, buttonRef }) {
-  return (
-    <button
-      ref={buttonRef}
+    <a
+      href={BRAND.calendly}
+      target="_blank"
+      rel="noopener noreferrer"
       onClick={onClick}
-      style={{
-        width: '44px',
-        height: '44px',
-        borderRadius: '50%',
-        background: open ? 'rgba(255,255,255,0.1)' : 'transparent',
-        border: '1px solid',
-        borderColor: open
-          ? 'rgba(61,170,255,0.3)'
-          : 'rgba(255,255,255,0.1)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
-        transition: 'background 0.2s ease, border-color 0.2s ease',
-        flexShrink: 0,
-        WebkitTapHighlightColor: 'transparent',
-      }}
-      aria-label={open ? 'Close menu' : 'Open menu'}
-      aria-expanded={open}
+      className={`inline-flex items-center gap-2 rounded-full bg-[var(--brand)] px-5 font-semibold text-white transition-colors duration-200 hover:bg-[var(--brand-soft)] ${className}`}
     >
-      <div style={{ position: 'relative', width: '18px', height: '12px' }}>
-        <span style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '18px',
-          height: '1.5px',
-          background: '#ffffff',
-          borderRadius: '2px',
-          transformOrigin: 'center',
-          transition: 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease',
-          transform: open ? 'translateY(5.25px) rotate(45deg)' : 'none',
-        }} />
-        <span style={{
-          position: 'absolute',
-          top: '50%',
-          left: 0,
-          marginTop: '-0.75px',
-          width: '14px',
-          height: '1.5px',
-          background: '#ffffff',
-          borderRadius: '2px',
-          transition: 'opacity 0.2s ease, width 0.2s ease',
-          opacity: open ? 0 : 1,
-        }} />
-        <span style={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          width: '18px',
-          height: '1.5px',
-          background: '#ffffff',
-          borderRadius: '2px',
-          transformOrigin: 'center',
-          transition: 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease',
-          transform: open ? 'translateY(-5.25px) rotate(-45deg)' : 'none',
-        }} />
-      </div>
-    </button>
+      Book a call
+      <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden>
+        <path
+          d="M2 6h8m0 0L6.5 2.5M10 6 6.5 9.5"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </a>
   );
 }
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const [active, setActive] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
-  
-  const menuButtonRef = useRef(null);
-  const drawerFirstLinkRef = useRef(null);
 
+  const sentinelRef = useRef(null);
+  const menuButtonRef = useRef(null);
+
+  // Scrolled state via a 1px sentinel — fires exactly twice per crossing,
+  // instead of a scroll listener doing React work on every event.
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    const el = sentinelRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setScrolled(!entry.isIntersecting),
+      { threshold: 0 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
+  // Active section: one observer across all sections. Never loop
+  // getBoundingClientRect per section per frame — that is N forced layouts.
   useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = 'hidden';
-      const timeout = setTimeout(() => {
-        drawerFirstLinkRef.current?.focus();
-      }, 100);
-      return () => clearTimeout(timeout);
-    } else {
-      document.body.style.overflow = '';
-    }
+    const ids = NAV_LINKS.map((l) => l.href.slice(1));
+    const sections = ids
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
+    if (!sections.length) return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      },
+      { rootMargin: '-45% 0px -50% 0px', threshold: 0 }
+    );
+    sections.forEach((s) => io.observe(s));
+    return () => io.disconnect();
+  }, []);
+
+  // Lock scroll while the drawer is open.
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
     return () => {
       document.body.style.overflow = '';
     };
   }, [menuOpen]);
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const onKey = (e) => {
       if (e.key === 'Escape' && menuOpen) {
         setMenuOpen(false);
         menuButtonRef.current?.focus();
       }
     };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
   }, [menuOpen]);
 
   return (
     <>
-      <motion.div
-        initial={{ opacity: 0, y: -16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+      <div ref={sentinelRef} aria-hidden className="absolute top-0 h-px w-full" />
+
+      <header
+        className="fixed inset-x-0 top-0 z-[100] transition-[background-color,box-shadow,border-color] duration-300"
         style={{
-          position: 'fixed',
-          top: '20px',
-          left: '0',
-          right: '0',
-          margin: '0 auto',
-          width: 'calc(100% - 48px)',
-          maxWidth: '1100px',
-          zIndex: 100,
+          height: 'var(--nav-h)',
+          // Solid, not backdrop-filter: a blur on a fixed nav recomposites on
+          // every scroll frame, which is a real cost on mid-tier Android.
+          backgroundColor: scrolled ? 'rgba(251,250,248,0.96)' : 'transparent',
+          borderBottom: `1px solid ${scrolled ? 'var(--line)' : 'transparent'}`,
+          boxShadow: scrolled ? '0 1px 24px rgba(24,47,67,0.06)' : 'none',
         }}
       >
         <nav
-          className="w-full h-[52px] md:h-[56px] lg:h-[60px] pl-[20px] md:pl-[24px] pr-[8px]"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            overflow: 'visible',
-            background: scrolled
-              ? 'rgba(5, 13, 26, 0.82)'
-              : 'rgba(5, 13, 26, 0.65)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            border: scrolled
-              ? '1px solid rgba(61, 170, 255, 0.18)'
-              : '1px solid rgba(255, 255, 255, 0.08)',
-            borderRadius: '100px',
-            transition: 'background 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease',
-            boxShadow: scrolled
-              ? '0 8px 32px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255,255,255,0.04) inset'
-              : '0 4px 24px rgba(0, 0, 0, 0.2)',
-          }}
+          aria-label="Main"
+          className="mx-auto flex h-full max-w-[1280px] items-center justify-between px-[var(--page-px)]"
         >
-          {/* Mobile layout */}
-          <div className="flex items-center justify-between w-full lg:hidden">
-            <Logo />
-            <MenuButton open={menuOpen} onClick={() => setMenuOpen(!menuOpen)} buttonRef={menuButtonRef} />
-          </div>
+          <Logo />
 
-          {/* Desktop layout */}
-          <div className="hidden lg:flex items-center justify-between w-full relative" style={{ gap: '8px' }}>
-            <Logo />
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-              }}
+          <ul className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 lg:flex">
+            {NAV_LINKS.map((link) => {
+              const id = link.href.slice(1);
+              const isActive = active === id;
+              return (
+                <li key={link.href} className="relative">
+                  <Link
+                    href={link.href}
+                    aria-current={isActive ? 'true' : undefined}
+                    className="relative z-10 flex h-9 items-center rounded-full px-4 text-[14px] font-medium transition-colors duration-150"
+                    style={{ color: isActive ? 'var(--ink)' : 'var(--muted)' }}
+                  >
+                    {link.label}
+                  </Link>
+                  {isActive && (
+                    <m.span
+                      layoutId="nav-pill"
+                      aria-hidden
+                      className="absolute inset-0 rounded-full bg-[color-mix(in_srgb,var(--brand)_12%,transparent)]"
+                      transition={spring.snappy}
+                    />
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+
+          <div className="flex items-center gap-2">
+            <CTA className="hidden h-11 text-[14px] lg:inline-flex" />
+
+            <button
+              ref={menuButtonRef}
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={menuOpen}
+              className="grid h-11 w-11 place-items-center rounded-full border border-[var(--line)] lg:hidden"
+              style={{ background: menuOpen ? 'rgba(24,47,67,0.06)' : 'transparent' }}
             >
-              {navLinks.map((link, i) => (
-                <NavLink key={link.href} link={link} index={i} />
-              ))}
-            </div>
-            <CTAButton />
+              <span aria-hidden className="relative block h-3 w-[18px]">
+                {[0, 1, 2].map((i) => (
+                  <span
+                    key={i}
+                    className="absolute left-0 block h-[1.5px] rounded bg-[var(--ink)] transition-all duration-300"
+                    style={{
+                      width: i === 1 ? 14 : 18,
+                      top: i === 0 ? 0 : i === 1 ? 'calc(50% - 0.75px)' : 'auto',
+                      bottom: i === 2 ? 0 : 'auto',
+                      opacity: menuOpen && i === 1 ? 0 : 1,
+                      transform:
+                        menuOpen && i === 0
+                          ? 'translateY(5.25px) rotate(45deg)'
+                          : menuOpen && i === 2
+                          ? 'translateY(-5.25px) rotate(-45deg)'
+                          : 'none',
+                    }}
+                  />
+                ))}
+              </span>
+            </button>
           </div>
         </nav>
-      </motion.div>
+      </header>
 
-      {/* Mobile Drawer */}
+      {/* Mobile drawer */}
       <div
+        id="mobile-menu"
         aria-hidden={!menuOpen}
+        className="fixed inset-0 z-[99] flex flex-col bg-[var(--surface)] px-[var(--page-px)] pb-12 pt-[calc(var(--nav-h)+24px)] lg:hidden"
         style={{
-          position: 'fixed',
-          inset: 0,
-          zIndex: 99,
-          background: 'rgba(5, 13, 26, 0.97)',
-          backdropFilter: 'blur(24px)',
-          WebkitBackdropFilter: 'blur(24px)',
-          display: 'flex',
-          flexDirection: 'column',
-          padding: '100px 32px 48px',
           transform: menuOpen ? 'translateX(0)' : 'translateX(100%)',
-          transition: 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)',
-          overflowY: 'auto',
+          transition: `transform 0.36s cubic-bezier(0.22,1,0.36,1)`,
           pointerEvents: menuOpen ? 'auto' : 'none',
+          overflowY: 'auto',
         }}
       >
-        <nav style={{ flex: 1 }}>
-          {navLinks.map((link, i) => (
+        <nav aria-label="Mobile" className="flex-1">
+          {NAV_LINKS.map((link, i) => (
             <Link
               key={link.href}
               href={link.href}
+              tabIndex={menuOpen ? 0 : -1}
               onClick={() => setMenuOpen(false)}
-              ref={i === 0 ? drawerFirstLinkRef : null}
+              className="block border-b border-[var(--line)] py-5 font-brand text-[clamp(28px,7vw,38px)] font-extrabold tracking-[-0.03em] text-[var(--ink)]"
               style={{
-                display: 'block',
-                fontFamily: "'Bricolage Grotesque', sans-serif",
-                fontSize: 'clamp(36px, 8vw, 48px)',
-                fontWeight: '800',
-                color: '#ffffff',
-                textDecoration: 'none',
-                letterSpacing: '-0.03em',
-                lineHeight: '1.1',
-                paddingTop: '20px',
-                paddingBottom: '20px',
-                borderBottom: '1px solid rgba(255,255,255,0.07)',
                 opacity: menuOpen ? 1 : 0,
-                transform: menuOpen ? 'translateY(0)' : 'translateY(16px)',
-                transition: `opacity 0.4s ease ${0.1 + i * 0.06}s, transform 0.4s cubic-bezier(0.22,1,0.36,1) ${0.1 + i * 0.06}s`,
+                transform: menuOpen ? 'translateY(0)' : 'translateY(12px)',
+                transition: `opacity ${dur.base}s ease ${0.06 + i * 0.05}s, transform ${dur.base}s cubic-bezier(0.22,1,0.36,1) ${0.06 + i * 0.05}s`,
               }}
             >
               {link.label}
@@ -385,58 +233,15 @@ export default function Nav() {
           ))}
         </nav>
 
-        <div
-          style={{
-            marginTop: '48px',
-            opacity: menuOpen ? 1 : 0,
-            transform: menuOpen ? 'translateY(0)' : 'translateY(16px)',
-            transition: 'opacity 0.4s ease 0.38s, transform 0.4s ease 0.38s',
-          }}
-        >
-          <Link
-            href="/get-started"
+        <div className="mt-10">
+          <CTA
+            className="h-14 w-full justify-center text-[16px]"
             onClick={() => setMenuOpen(false)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '10px',
-              width: '100%',
-              height: '56px',
-              background: '#0085FF',
-              borderRadius: '100px',
-              fontFamily: "'Space Grotesk', sans-serif",
-              fontSize: '16px',
-              fontWeight: '700',
-              color: '#ffffff',
-              textDecoration: 'none',
-              letterSpacing: '-0.01em',
-              boxShadow: '0 0 32px rgba(0,133,255,0.35)',
-              marginBottom: '20px',
-            }}
-          >
-            Get Started
-            <span style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              width: '30px', height: '30px', borderRadius: '50%',
-              background: 'rgba(255,255,255,0.2)',
-            }}>
-              →
-            </span>
-          </Link>
-
-          <p style={{
-            textAlign: 'center',
-            fontSize: '13px',
-            color: 'rgba(255,255,255,0.35)',
-            fontFamily: "'Space Grotesk', sans-serif",
-          }}>
+          />
+          <p className="mt-5 text-center text-[13px] text-[var(--muted)]">
             Questions?{' '}
-            <a
-              href="mailto:info@trygrupp.africa"
-              style={{ color: '#3DAAFF', textDecoration: 'none' }}
-            >
-              info@trygrupp.africa
+            <a href={`mailto:${BRAND.email}`} className="text-[var(--brand-deep)] underline">
+              {BRAND.email}
             </a>
           </p>
         </div>
