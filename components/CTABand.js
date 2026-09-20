@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { Reveal } from '@/components/motion/Reveal';
 import MagneticButton from '@/components/MagneticButton';
 import { CTA } from '@/lib/content';
@@ -15,7 +16,21 @@ export default function CTABand() {
           </div>
 
           <div className="relative z-10">
+            {/* Reinforces the action literally: this button opens a calendar. */}
             <Reveal y={12}>
+              <Image
+                src="/calendar.png"
+                alt=""
+                aria-hidden="true"
+                width={220}
+                height={220}
+                loading="lazy"
+                sizes="88px"
+                className="mx-auto mb-7 h-[72px] w-[72px] md:h-[88px] md:w-[88px]"
+              />
+            </Reveal>
+
+            <Reveal y={12} delay={0.04}>
               <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[var(--brand-soft)]">
                 {CTA.eyebrow}
               </p>

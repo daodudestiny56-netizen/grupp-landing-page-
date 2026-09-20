@@ -22,6 +22,33 @@ export default function MissionSection() {
             {MISSION.accent}
           </p>
         </Reveal>
+
+        {/* Grupp's own brand animation — the wordmark assembling itself as the
+            promise lands.
+
+            <picture> with a reduced-motion <source> is the only way to stop an
+            animated GIF: a GIF ignores prefers-reduced-motion entirely, and no
+            CSS can pause it. Viewers who ask for less motion get the still
+            frame instead. */}
+        <Reveal delay={0.12}>
+          <figure className="mx-auto mt-16 max-w-[760px]">
+            <picture>
+              <source
+                media="(prefers-reduced-motion: reduce)"
+                srcSet="/grupp-intro-still.png"
+              />
+              <img
+                src="/grupp-intro.gif"
+                alt="The Grupp wordmark assembling from geometric blocks"
+                width={1152}
+                height={648}
+                loading="lazy"
+                decoding="async"
+                className="w-full rounded-[24px] shadow-[0_18px_50px_rgba(24,47,67,0.14)]"
+              />
+            </picture>
+          </figure>
+        </Reveal>
       </div>
     </section>
   );
