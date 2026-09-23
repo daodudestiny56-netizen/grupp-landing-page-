@@ -11,7 +11,7 @@ import CTABand from '@/components/CTABand';
 import Footer from '@/components/Footer';
 
 // Server Component. Interactivity lives in a handful of client islands
-// (Nav, ProductTabs, StickyScene, DeviceCycler, VideoCard, MagneticButton),
+// (Nav, ProductTabs, StickyScene, TransactionLedger, VideoCard, MagneticButton),
 // so the rest of this tree is prerendered under cacheComponents.
 export default function Home() {
   return (

@@ -1,6 +1,6 @@
 import { Reveal } from '@/components/motion/Reveal';
-import DeviceCycler from '@/components/DeviceCycler';
-import { DEMO_TRANSACTIONS } from '@/lib/content';
+import TransactionLedger from '@/components/TransactionLedger';
+import { DEMO_TERMINAL, DEMO_TRANSACTIONS } from '@/lib/content';
 
 // The navy band — dark used as punctuation, exactly as the original site does
 // for its "offline communities" section.
@@ -47,24 +47,15 @@ export default function ProductDemo() {
           </div>
         </Reveal>
 
-        {/* Device frame. Static — never animate a bezel. */}
+        {/* One panel, no nested frame. A card inside a card inside a card was
+            the thing that made this read as filler. */}
         <Reveal delay={0.1}>
-          <div className="mx-auto w-full max-w-[380px]">
-            <div className="rounded-[36px] border border-white/15 bg-white/[0.04] p-4">
-              <div className="rounded-[26px] bg-[#04183A] p-5">
-                <div className="mb-5 flex items-center justify-between">
-                  <span className="text-[13px] font-bold tracking-[-0.02em] text-white">
-                    grupp<span className="text-[var(--brand)]">.</span>
-                  </span>
-                  <span className="rounded-full bg-white/10 px-2.5 py-1 text-[9.5px] font-semibold uppercase tracking-[0.12em] text-white/60">
-                    Product demo
-                  </span>
-                </div>
-
-                <DeviceCycler transactions={DEMO_TRANSACTIONS} />
-              </div>
-            </div>
-            <p className="mt-4 text-center text-[11.5px] text-white/35">
+          <div className="mx-auto w-full max-w-[440px]">
+            <TransactionLedger
+              terminal={DEMO_TERMINAL}
+              transactions={DEMO_TRANSACTIONS}
+            />
+            <p className="mt-3.5 text-[11.5px] text-white/35">
               Illustrative interface. Not live transaction data.
             </p>
           </div>

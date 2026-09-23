@@ -59,7 +59,7 @@ label, and don't attach an aggregate total to it.
 | `Nav.js` | IntersectionObservers, drawer state, `layoutId` pill |
 | `ProductTabs.js` | tab state, `AnimatePresence` |
 | `StickyScene.js` | the scroll-driven "How it works" |
-| `DeviceCycler.js` | timers, visibility gating |
+| `TransactionLedger.js` | timers, visibility gating |
 | `VideoCard.js` | YouTube facade click-to-load |
 | `MagneticButton.js` | pointer springs |
 
