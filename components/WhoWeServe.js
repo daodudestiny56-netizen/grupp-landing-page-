@@ -7,35 +7,50 @@ import { COMMUNITIES } from '@/lib/content';
 // These are Grupp's own merchant categories, lifted from their real onboarding
 // taxonomy. Ajo/Esusu thrift groups and Okada hailing are the texture that no
 // competitor's site has, and they replace the invented bank-logo marquee.
+function Chip({ label }) {
+  return (
+    <li className="shrink-0 whitespace-nowrap rounded-full border border-[var(--line)] bg-white px-5 py-2.5 text-[14px] font-medium text-[var(--ink)]">
+      {label}
+    </li>
+  );
+}
+
 function Row({ items, direction, hideOnMobile = false }) {
-  const doubled = [...items, ...items];
   return (
     <div
       className={`marquee-row marquee-mask overflow-hidden py-2.5 ${
         hideOnMobile ? 'hidden md:block' : ''
       }`}
     >
-      <ul
-        className={`marquee-track gap-3 ${
+      <div
+        className={`marquee-track ${
           direction === 'left' ? 'marquee-left' : 'marquee-right'
         }`}
       >
-        {doubled.map((item, i) => (
-          <li
-            key={`${item}-${i}`}
-            aria-hidden={i >= items.length}
-            className="shrink-0 rounded-full border border-[var(--line)] bg-white px-5 py-2.5 text-[14px] font-medium text-[var(--ink)]"
-          >
-            {item}
-          </li>
-        ))}
-      </ul>
+        {/* Two identical sets. The second is the loop's tail, so it is hidden
+            from assistive tech — a screen reader reads the list once. */}
+        <ul className="marquee-set">
+          {items.map((item) => (
+            <Chip key={item} label={item} />
+          ))}
+        </ul>
+        <ul className="marquee-set" aria-hidden="true">
+          {items.map((item) => (
+            <Chip key={`dup-${item}`} label={item} />
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
 
 export default function WhoWeServe() {
+  // Both rows carry the full list rather than half each: a six-chip set ran
+  // out of content on a wide monitor. Row two is rotated so the rows read as
+  // different content passing in opposite directions.
   const half = Math.ceil(COMMUNITIES.length / 2);
+  const rowTwo = [...COMMUNITIES.slice(half), ...COMMUNITIES.slice(0, half)];
+
   return (
     <section
       id="communities"
@@ -64,8 +79,8 @@ export default function WhoWeServe() {
 
       {/* Full-bleed, outside the max-width container. */}
       <div className="mt-14 -mx-[var(--page-px)]">
-        <Row items={COMMUNITIES.slice(0, half)} direction="left" />
-        <Row items={COMMUNITIES.slice(half)} direction="right" hideOnMobile />
+        <Row items={COMMUNITIES} direction="left" />
+        <Row items={rowTwo} direction="right" hideOnMobile />
       </div>
     </section>
   );

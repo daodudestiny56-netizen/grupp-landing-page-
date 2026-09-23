@@ -154,8 +154,19 @@ button, a[role="button"], [role="button"] {
 }
 
 /* ── Marquee ──────────────────────────────────────────────
-   Animates ONE element (the track), not N items. Track is duplicated exactly
-   2x and travels -50%. Zero JS, zero React. */
+   Animates ONE element per row (the track), not N items. Zero JS, zero React.
+
+   The track holds exactly two identical sets and travels -50%, which lands
+   set 2 precisely where set 1 started — a seamless loop.
+
+   That only works while one set is at least as wide as the screen. Otherwise
+   the track runs out of content before it loops and a gap scrolls past, which
+   is what happened on anything wider than ~1500px. `min-width: 100vw` on the
+   set is the guard: however wide the monitor, one set always covers it.
+
+   The track stays `width: max-content` so the -50% resolves against the
+   content width rather than the viewport — using `100%` here would create a
+   circular dependency with the set's min-width. */
 @keyframes marquee-left {
   from { transform: translate3d(0, 0, 0); }
   to   { transform: translate3d(-50%, 0, 0); }
@@ -174,8 +185,24 @@ button, a[role="button"], [role="button"] {
   will-change: transform;
 }
 
-.marquee-left  { animation: marquee-left 44s linear infinite; }
-.marquee-right { animation: marquee-right 52s linear infinite; }
+.marquee-set {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 12px;
+  /* The trailing gap lives inside the set, so the two sets butt up flush and
+     one set width is exactly 50% of the track. A gap on the track itself
+     would desynchronise the loop by half that gap on every cycle. */
+  padding-right: 12px;
+  min-width: 100vw;
+  /* Only bites once a set is stretched past its natural width — on an
+     ultrawide the chips spread out instead of leaving a hole. */
+  justify-content: space-around;
+}
+
+/* Durations are tuned for pixels-per-second, not laps: each set is now a full
+   12 chips, so the travel distance roughly doubled and the times with it. */
+.marquee-left  { animation: marquee-left 80s linear infinite; }
+.marquee-right { animation: marquee-right 95s linear infinite; }
 
 @media (hover: hover) {
   .marquee-row:hover .marquee-track { animation-play-state: paused; }
@@ -215,6 +242,11 @@ button, a[role="button"], [role="button"] {
     animation: none !important;
     will-change: auto;
   }
+  /* The second set only exists to make the loop seamless. With no loop it is
+     just the list printed twice, so drop it — and stop stretching the first
+     set to the viewport, which would strand the chips far apart. */
+  .marquee-set + .marquee-set { display: none; }
+  .marquee-set { min-width: 0; justify-content: flex-start; }
   .marquee-row {
     overflow-x: auto;
     scroll-snap-type: x mandatory;
